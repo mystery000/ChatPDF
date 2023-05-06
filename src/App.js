@@ -1,9 +1,7 @@
-function App() {
-  return (
-    <div className="App">
-      
-    </div>
-  );
+import DefaultLayout from './layout/DefaultLayout'
+
+const App = () => {
+    return <DefaultLayout></DefaultLayout>
 }
 
-export default App; 
+export default App
