@@ -19,7 +19,7 @@ const App = () => {
                     ></path>
                 </svg>
                 <span className="mt-2 text-base leading-normal">
-                    Upload PDF
+                    Upload Document
                 </span>
                 <input type="file" className="hidden" />
             </label>

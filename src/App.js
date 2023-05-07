@@ -1,7 +1,16 @@
-import DefaultLayout from './layout/DefaultLayout'
+import Main from './pages/Main'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const App = () => {
-    return <DefaultLayout></DefaultLayout>
+    return (
+        <>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Main />} />
+                </Routes>
+            </BrowserRouter>
+        </>
+    )
 }
 
 export default App
