@@ -1,8 +1,8 @@
+import Chat from '../ChatApp'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
 import Navigation from '../components/Navigation'
 import FileUploadModal from '../components/FileUploadModal'
-
 const App = () => {
     return (
         <MainLayout>
@@ -17,7 +17,7 @@ const App = () => {
                 </div>
                 <div className="w-full">
                     <Navigation />
-                    <div></div>
+                    <Chat />
                 </div>
             </div>
         </MainLayout>
