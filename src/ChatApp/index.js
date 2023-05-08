@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import ChatHeader from './ChatHeader/ChatHeader'
 import ChatContent from './ChatContent/ChatContent'
@@ -14,6 +15,34 @@ const Chat = () => {
     /** Create a new message */
     const sendANewMessage = (message) => {
         setChatMessages((prevMessages) => [...prevMessages, message])
+        // query document to get answery from Grain API, then add answer to state
+        axios
+            .post(
+                'https://api.usegrain.co/v1/collections/d1d34d37-b055-4f4c-a146-fadb0d4e4a09/query',
+                { query: message.text },
+                {
+                    headers: {
+                        Authorization:
+                            'Bearer 370bde20-db9b-4f07-ad0e-377f75e43581',
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+            .then((response) => {
+                const newMessagePayload = {
+                    sentAt: new Date(),
+                    sentBy: 'ChatPDF',
+                    isChatOwner: false,
+                    text: response.data.result,
+                }
+                setChatMessages((prevMessages) => [
+                    ...prevMessages,
+                    newMessagePayload,
+                ])
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     return (

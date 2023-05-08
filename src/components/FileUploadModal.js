@@ -1,8 +1,41 @@
-import React from 'react'
+import axios from 'axios'
+import FormData from 'form-data'
 import FileUpload from './FileUpload'
+import React, { useState } from 'react'
 
 export default function App() {
-    const [showModal, setShowModal] = React.useState(false)
+    const [filename, setFileName] = useState('')
+    const [showModal, setShowModal] = useState(false)
+    const [selectedFile, setSelectedFile] = useState(null)
+
+    const onSelectHandler = (event) => {
+        setSelectedFile(event.target.files[0])
+        setFileName(event.target.files[0].name)
+    }
+
+    const onUploadDocumentHandler = () => {
+        setShowModal(false)
+        if (selectedFile) {
+            const form = new FormData()
+            form.append('file', selectedFile)
+            console.log(selectedFile)
+            axios
+                .post('https://api.usegrain.co/v1/documents/upload', form, {
+                    headers: {
+                        Authorization:
+                            'Bearer 370bde20-db9b-4f07-ad0e-377f75e43581',
+                    },
+                })
+                .then((response) => {
+                    console.log(response.data)
+                    // send response data as props to anywhere so that it can use them.
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
+    }
+
     return (
         <>
             <button
@@ -28,17 +61,20 @@ export default function App() {
                                 <div className="relative p-6 flex-auto">
                                     <input
                                         type="text"
+                                        defaultValue={filename}
                                         placeholder="Property Name"
                                         className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 min-w-[500px]"
                                     />
-                                    <FileUpload />
+                                    <FileUpload
+                                        onSelectHandler={onSelectHandler}
+                                    />
                                 </div>
                                 {/*footer*/}
                                 <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
                                     <button
                                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={() => setShowModal(false)}
+                                        onClick={onUploadDocumentHandler}
                                     >
                                         Add Property
                                     </button>

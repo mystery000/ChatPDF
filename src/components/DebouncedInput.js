@@ -25,6 +25,7 @@ const DebouncedInput = ({
             <div className="relative w-full">
                 <input
                     type="text"
+                    placeholder="Add a question"
                     className="w-full block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-l-lg bg-white focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
                     id="message-box"
                     value={value}

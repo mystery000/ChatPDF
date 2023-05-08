@@ -1,7 +1,18 @@
+import { useState } from 'react'
+
 const App = ({ children, name }) => {
+    const [isCollapsed, setIsCollapsed] = useState(true)
+
+    const handleClick = () => {
+        setIsCollapsed((prev) => !prev)
+    }
+
     return (
         <>
-            <button className="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none">
+            <button
+                onClick={handleClick}
+                className="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none"
+            >
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -32,7 +43,7 @@ const App = ({ children, name }) => {
                     </h1>
                 </div>
             </button>
-            {children}
+            {isCollapsed ? null : children}
         </>
     )
 }
