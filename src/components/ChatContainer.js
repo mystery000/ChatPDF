@@ -1,16 +1,15 @@
 import Chat from './Chat'
-import { chats } from '../data'
 import Document from './Document'
 import DocumentUploadModal from './DocumentUploadModal'
 
-const App = () => {
+const App = ({ properties }) => {
     return (
         <>
-            {chats.map((chat) => (
-                <Chat name={chat.name} key={chat.id}>
+            {properties.map((property, index) => (
+                <Chat name={property.filename} key={index}>
                     <hr></hr>
-                    {chat.documents.map((document) => (
-                        <Document name={document.name} key={document.id} />
+                    {property.documents.map((document, index) => (
+                        <Document name={document.file_name} key={index} />
                     ))}
                     <div className="px-5 text-center">
                         <DocumentUploadModal />
