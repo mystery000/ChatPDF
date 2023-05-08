@@ -5,7 +5,7 @@ const App = ({ children, property, onSelectPropertyHandler }) => {
 
     const handleClick = () => {
         setIsCollapsed((prev) => !prev)
-        onSelectPropertyHandler(property.collection_id)
+        onSelectPropertyHandler(property.id)
     }
 
     return (
@@ -40,7 +40,7 @@ const App = ({ children, property, onSelectPropertyHandler }) => {
                 </svg>
                 <div className="text-left rtl:text-right">
                     <h1 className="text-sm font-medium text-gray-700 dark:text-white">
-                        {property.filename}
+                        {property.name}
                     </h1>
                 </div>
             </button>

@@ -24,6 +24,12 @@ const ChatInputBox = ({ sendANewMessage }) => {
         }
     }
 
+    const onKeyDownHandler = (event) => {
+        if (event.key === 'Enter') {
+            doSendMessage()
+        }
+    }
+
     return (
         <div className="px-6 py-3 bg-white w-100 overflow-hidden rounded-bl-xl rounded-br-xla">
             <div className="flex flex-row items-center">
@@ -31,6 +37,7 @@ const ChatInputBox = ({ sendANewMessage }) => {
                     value={newMessage ?? ''}
                     debounce={100}
                     onChange={(value) => setNewMessage(value)}
+                    onKeyDownHandler={onKeyDownHandler}
                 />
                 <div
                     type="button"

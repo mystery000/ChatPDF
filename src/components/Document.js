@@ -1,4 +1,4 @@
-const App = ({ name }) => {
+const Document = ({ name }) => {
     return (
         <>
             <button className="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none">
@@ -67,4 +67,4 @@ const App = ({ name }) => {
     )
 }
 
-export default App
+export default Document

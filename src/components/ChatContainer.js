@@ -1,30 +1,17 @@
 import Chat from './Chat'
-import Document from './Document'
+import DocumentList from './DocumentList'
 import DocumentUploadModal from './DocumentUploadModal'
 
-const App = ({
-    properties,
-    onUploadDocumentHandler,
-    onSelectPropertyHandler,
-}) => {
+const App = ({ properties, onSelectPropertyHandler }) => {
     return (
         <>
             {properties.map((property, index) => (
                 <Chat
+                    key={index}
                     property={property}
                     onSelectPropertyHandler={onSelectPropertyHandler}
-                    key={index}
                 >
-                    <hr></hr>
-                    {property.documents.map((document, index) => (
-                        <Document name={document.file_name} key={index} />
-                    ))}
-                    <div className="px-5 text-center">
-                        <DocumentUploadModal
-                            collectionID={property.collection_id}
-                            onUploadDocumentHandler={onUploadDocumentHandler}
-                        />
-                    </div>
+                    <DocumentList collectionID={property.id} />
                 </Chat>
             ))}
         </>

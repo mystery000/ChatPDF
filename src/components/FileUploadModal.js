@@ -13,7 +13,7 @@ export default function App({ onUploadHandler }) {
         setPropertyName(file.name)
     }
 
-    const onUploadDocumentHandler = () => {
+    const onUploadPropertyHandler = () => {
         setShowModal(false)
         if (selectedFile && propertyName.length > 0) {
             // Create Collection: Create a new collection that you can upload documnet to and query.
@@ -51,9 +51,8 @@ export default function App({ onUploadHandler }) {
                             .then((response) => {
                                 if (response.status === 200) {
                                     onUploadHandler({
+                                        id: collection_id,
                                         name: collection_name,
-                                        collection_id: collection_id,
-                                        document_name: response.data.filename,
                                     })
                                     setPropertyName('')
                                 }
@@ -112,7 +111,7 @@ export default function App({ onUploadHandler }) {
                                     <button
                                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={onUploadDocumentHandler}
+                                        onClick={onUploadPropertyHandler}
                                     >
                                         Add Property
                                     </button>

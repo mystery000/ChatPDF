@@ -1,7 +1,7 @@
 const propertyCollection = [
     {
         filename: "Julian's property",
-        collection_id: '12345678-abcd-1234-abcd-1234567890ab',
+        collection_id: 'bd2b1902-95f7-4ae4-a6c4-0110a03478f1',
         documents: [
             {
                 file_name: 'LeaseExample.pdf',

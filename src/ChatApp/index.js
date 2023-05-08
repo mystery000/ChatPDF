@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import ChatHeader from './ChatHeader/ChatHeader'
 import ChatContent from './ChatContent/ChatContent'
 import ChatInputBox from './ChatInputBox/ChatInputBox'
-import { useGetMessagesWithCollectionId } from '../hooks/useGetMessagesWithCollectionId'
+import { useGetMessages } from '../hooks/useGetMessages'
 
 const Chat = ({ collectionId }) => {
     /** Simulate a hook fetching the data */
-    const { messages } = useGetMessagesWithCollectionId(collectionId)
+    const { messages } = useGetMessages(collectionId)
     const [chatMessages, setChatMessages] = useState([])
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const Chat = ({ collectionId }) => {
         // query document to get answery from Grain API, then add answer to state
         axios
             .post(
-                'https://api.usegrain.co/v1/collections/d1d34d37-b055-4f4c-a146-fadb0d4e4a09/query',
+                `https://api.usegrain.co/v1/collections/${collectionId}/query`,
                 { query: message.text },
                 {
                     headers: {

@@ -1,6 +1,6 @@
 import { propertyCollection } from '../data'
 
-export const useGetMessagesWithCollectionId = (collectionId) => {
+export const useGetMessages = (collectionId) => {
     const property = propertyCollection.find(
         (property) => property.collection_id === collectionId
     )
