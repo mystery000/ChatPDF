@@ -1,8 +1,43 @@
-import React from 'react'
+import axios from 'axios'
+import FormData from 'form-data'
+import React, { useState } from 'react'
 import DocumentUpload from './DocumentUpload'
 
-export default function App() {
+export default function App({ collectionID, onUploadDocumentHandler }) {
     const [showModal, setShowModal] = React.useState(false)
+    const [selectedFile, setSelectedFile] = useState(undefined)
+
+    const onSelectHandler = (file) => {
+        setSelectedFile(file)
+    }
+    const onUploadHandler = () => {
+        setShowModal(false)
+        if (selectedFile) {
+            // Collection Upload: Uploads a document to the specified collection
+            const form = new FormData()
+            form.append('file', selectedFile)
+            axios
+                .post(
+                    `https://api.usegrain.co/v1/collections/${collectionID}/upload`,
+                    form,
+                    {
+                        headers: {
+                            Authorization:
+                                'Bearer 370bde20-db9b-4f07-ad0e-377f75e43581',
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    }
+                )
+                .then((response) => {
+                    if (response.status === 200) {
+                        onUploadDocumentHandler(response.data)
+                    }
+                })
+                .catch((error) =>
+                    console.log('Failed to call Grain API: Collection Upload')
+                )
+        }
+    }
     return (
         <>
             <button
@@ -25,19 +60,21 @@ export default function App() {
                                 </div>
                                 {/*body*/}
                                 <div className="relative p-6 flex-auto">
-                                    <input
+                                    {/* <input
                                         type="text"
                                         placeholder="Document Name"
                                         className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 min-w-[500px]"
+                                    /> */}
+                                    <DocumentUpload
+                                        onSelectHandler={onSelectHandler}
                                     />
-                                    <DocumentUpload />
                                 </div>
                                 {/*footer*/}
                                 <div className="flex items-center justify-center p-3 border-t border-solid border-slate-200 rounded-b">
                                     <button
                                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={() => setShowModal(false)}
+                                        onClick={onUploadHandler}
                                     >
                                         Add Document
                                     </button>

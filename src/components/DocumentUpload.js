@@ -1,4 +1,7 @@
-const App = () => {
+const App = ({ onSelectHandler }) => {
+    const onChangeHandler = (event) => {
+        onSelectHandler(event.target.files[0])
+    }
     return (
         <div className="flex w-full items-center justify-center bg-grey-lighter mt-8">
             <label className="w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide cursor-pointer border">
@@ -21,7 +24,11 @@ const App = () => {
                 <span className="mt-2 text-base leading-normal">
                     Upload Document
                 </span>
-                <input type="file" className="hidden" />
+                <input
+                    type="file"
+                    className="hidden"
+                    onChange={onChangeHandler}
+                />
             </label>
         </div>
     )

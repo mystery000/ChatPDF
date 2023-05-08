@@ -1,16 +1,19 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChatHeader from './ChatHeader/ChatHeader'
 import ChatContent from './ChatContent/ChatContent'
 import ChatInputBox from './ChatInputBox/ChatInputBox'
-import { useGetMessages } from '../hooks/useGetMessages'
+import { useGetMessagesWithCollectionId } from '../hooks/useGetMessagesWithCollectionId'
 
-const Chat = () => {
+const Chat = ({ collectionId }) => {
     /** Simulate a hook fetching the data */
-    const { messages } = useGetMessages()
+    const { messages } = useGetMessagesWithCollectionId(collectionId)
+    const [chatMessages, setChatMessages] = useState([])
 
-    /** State to control new messages */
-    const [chatMessages, setChatMessages] = useState(messages)
+    useEffect(() => {
+        /** State to control new messages */
+        setChatMessages(messages)
+    }, [collectionId])
 
     /** Create a new message */
     const sendANewMessage = (message) => {
@@ -31,7 +34,7 @@ const Chat = () => {
             .then((response) => {
                 const newMessagePayload = {
                     sentAt: new Date(),
-                    sentBy: 'ChatPDF',
+                    sentBy: 'PropManager.ai',
                     isChatOwner: false,
                     text: response.data.result,
                 }

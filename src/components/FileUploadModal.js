@@ -15,7 +15,7 @@ export default function App({ onUploadHandler }) {
 
     const onUploadDocumentHandler = () => {
         setShowModal(false)
-        if (selectedFile) {
+        if (selectedFile && propertyName.length > 0) {
             // Create Collection: Create a new collection that you can upload documnet to and query.
             axios
                 .post(

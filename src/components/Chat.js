@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
-const App = ({ children, name }) => {
+const App = ({ children, property, onSelectPropertyHandler }) => {
     const [isCollapsed, setIsCollapsed] = useState(true)
 
     const handleClick = () => {
         setIsCollapsed((prev) => !prev)
+        onSelectPropertyHandler(property.collection_id)
     }
 
     return (
@@ -39,7 +40,7 @@ const App = ({ children, name }) => {
                 </svg>
                 <div className="text-left rtl:text-right">
                     <h1 className="text-sm font-medium text-gray-700 dark:text-white">
-                        {name}
+                        {property.filename}
                     </h1>
                 </div>
             </button>
