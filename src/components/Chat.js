@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { RiMessage2Line } from 'react-icons/ri'
+import { AiOutlineMessage } from 'react-icons/ai'
 
 const App = ({ children, property, onSelectPropertyHandler }) => {
     const [isCollapsed, setIsCollapsed] = useState(true)
@@ -13,11 +13,11 @@ const App = ({ children, property, onSelectPropertyHandler }) => {
         <>
             <button
                 onClick={handleClick}
-                className="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none"
+                className="flex items-center text-center p-3 m-1 w-full transition-colors duration-600 hover:text-white focus:outline-none"
             >
-                <RiMessage2Line size={24} />
-                <div className="text-left rtl:text-right">
-                    <h1 className="text-sm font-medium text-gray-700 dark:text-white">
+                <AiOutlineMessage size={20} />
+                <div>
+                    <h1 className="w-40 ml-2 whitespace-nowrap overflow-hidden text-ellipsis">
                         {property.name}
                     </h1>
                 </div>

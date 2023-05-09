@@ -19,20 +19,34 @@ const ChatContent = ({ messages }) => {
                         <Avatar />
                     </div>
                     <div
-                        className={`px-2 w-fit py-3 flex flex-col bg-purple-500 rounded-lg text-white ${
+                        className={`px-4 py-3 w-fit lg:max-w-lg flex flex-col  rounded-lg  shadow-md ${
                             message.isChatOwner
-                                ? 'order-1 mr-2'
-                                : 'order-2 ml-2'
+                                ? 'order-1 mr-2 bg-sky-500 shadow-blue-500/50'
+                                : 'order-2 ml-2 bg-white/80 shadow-slate-200 border'
                         }`}
                     >
-                        <span className="text-xs text-gray-200">
+                        <span
+                            className={`text-xs ${
+                                message.isChatOwner
+                                    ? 'text-gray-100'
+                                    : 'text-gray-400'
+                            }`}
+                        >
                             {message.sentBy}&nbsp;-&nbsp;
                             {new Date(message.sentAt).toLocaleDateString(
                                 'en-US',
                                 { hour: '2-digit', minute: '2-digit' }
                             )}
                         </span>
-                        <span className="text-md">{message.text}</span>
+                        <span
+                            className={`text-sm ${
+                                message.isChatOwner
+                                    ? 'text-white'
+                                    : 'text-gray-800'
+                            }`}
+                        >
+                            {message.text}
+                        </span>
                     </div>
                 </div>
             ))}

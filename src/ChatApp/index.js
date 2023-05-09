@@ -51,10 +51,6 @@ const Chat = ({ collectionId }) => {
     return (
         <div className="max-w-full mx-auto mt-2">
             <div className="bg-white relative">
-                <ChatHeader
-                    name={'Julian Sarokin'}
-                    numberOfMessages={chatMessages.length}
-                />
                 <ChatContent messages={chatMessages} />
                 <ChatInputBox sendANewMessage={sendANewMessage} />
             </div>

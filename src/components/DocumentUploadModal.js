@@ -41,15 +41,15 @@ export default function App({ collectionID, onUploadDocumentHandler }) {
     return (
         <>
             <button
-                className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                className="m-2 bg-white/20 text-white border border-dashed hover:border-indigo-500 font-semibold hover:text-white py-1 px-2 rounded"
                 onClick={() => setShowModal(true)}
             >
                 + Add a Document
             </button>
             {showModal ? (
                 <>
-                    <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none min-w-10">
-                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                    <div className="text-black justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none min-w-10">
+                        <div className="relative my-6 mx-auto max-w-3xl">
                             {/*content*/}
                             <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                                 {/*header*/}
@@ -72,7 +72,7 @@ export default function App({ collectionID, onUploadDocumentHandler }) {
                                 {/*footer*/}
                                 <div className="flex items-center justify-center p-3 border-t border-solid border-slate-200 rounded-b">
                                     <button
-                                        className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                        className="text-white bg-emerald-500  active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
                                         onClick={onUploadHandler}
                                     >

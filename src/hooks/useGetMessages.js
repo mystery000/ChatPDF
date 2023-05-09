@@ -8,7 +8,7 @@ export const useGetMessages = (collectionId) => {
     return {
         messages: [
             {
-                text: 'Hey!, I am PropManager.ai, What can I help you?',
+                text: 'Welcome to ChatPDF! What can I help you?',
                 sentBy: 'PropManager.ai',
                 sentAt: new Date(),
                 isChatOwner: false,
