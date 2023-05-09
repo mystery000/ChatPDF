@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { AiOutlineMessage } from 'react-icons/ai'
 
 const App = ({ children, property, active, onChangeHandler }) => {
-    const [isActive, setIsActive] = useState(false)
+    const [isActive, setIsActive] = useState(active)
 
     const handleClick = () => {
         setIsActive(true)
         onChangeHandler(property.id)
     }
+
     useEffect(() => {
         setIsActive(active)
     }, [active])

@@ -9,6 +9,7 @@ const App = ({ properties, onSelectPropertyHandler }) => {
         onSelectPropertyHandler(propertyId)
         setCollectionId(propertyId)
     }
+
     return (
         <>
             {properties.map((property, index) => (

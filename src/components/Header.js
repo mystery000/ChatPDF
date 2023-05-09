@@ -11,7 +11,7 @@ const Header = () => {
                         <TbDotsVertical color="rgb(153, 153, 153)" size={22} />
                     </button>
                 </div>
-                <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                <div className="w-full hidden flex-grow lg:block lg:flex lg:items-center lg:w-auto">
                     <div className="text-sm lg:flex-grow">
                         {/* <a
                             href="#responsive-header"
