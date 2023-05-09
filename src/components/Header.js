@@ -1,7 +1,7 @@
 import { FaRegUserCircle } from 'react-icons/fa'
 import { TbDotsVertical } from 'react-icons/tb'
 
-const ChatHeader = () => {
+const Header = () => {
     return (
         <>
             <nav className="flex items-center justify-between flex-wrap bg-white p-6">
@@ -34,4 +34,4 @@ const ChatHeader = () => {
     )
 }
 
-export default ChatHeader
+export default Header

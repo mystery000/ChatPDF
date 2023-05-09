@@ -41,7 +41,7 @@ export default function App({ collectionID, onUploadDocumentHandler }) {
     return (
         <>
             <button
-                className="m-2 bg-white/20 text-white border border-dashed hover:border-indigo-500 font-semibold hover:text-white py-1 px-2 rounded"
+                className="m-2 bg-white/20 text-white border border-dashed hover:border-indigo-500 font-semibold text-sm hover:text-white py-1 px-2 rounded"
                 onClick={() => setShowModal(true)}
             >
                 + Add a Document

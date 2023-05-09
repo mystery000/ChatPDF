@@ -2,7 +2,7 @@ import Chat from '../ChatApp'
 import { useState } from 'react'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
-import ChatHeader from '../components/ChatHeader'
+import Header from '../components/Header'
 import { ApiKeyProvider } from '../context/ApiKeyContext'
 
 const App = () => {
@@ -22,7 +22,7 @@ const App = () => {
                         />
                     </div>
                     <div className="w-full">
-                        <ChatHeader />
+                        <Header />
                         <div className="px-0 sm:px-[10%]">
                             <Chat collectionId={collectionId} />
                         </div>
