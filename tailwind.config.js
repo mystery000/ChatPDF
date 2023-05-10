@@ -4,7 +4,7 @@ module.exports = {
     theme: {
         extend: {
             height: {
-                'chat-content': 'calc(100vh - 170px)',
+                'chat-content': 'calc(100vh - 130px)',
             },
         },
     },

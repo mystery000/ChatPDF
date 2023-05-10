@@ -4,7 +4,7 @@ import { TbDotsVertical } from 'react-icons/tb'
 const Header = () => {
     return (
         <>
-            <nav className="flex items-center justify-between flex-wrap bg-white p-6">
+            <nav className="flex items-center justify-between flex-wrap bg-white p-3">
                 <div className="flex items-center flex-shrink-0 text-white mr-6"></div>
                 <div className="block lg:hidden">
                     <button className="cursor-point">
@@ -21,7 +21,7 @@ const Header = () => {
                         </a> */}
                     </div>
                     <div>
-                        <button className="flex items-center bg-slate-800 text-white active:bg-slate-900 font-bold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+                        <button className="flex items-center bg-slate-800 text-white active:bg-slate-900 font-bold text-sm px-5 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
                             <div className="mr-2">
                                 <FaRegUserCircle size={18} />
                             </div>

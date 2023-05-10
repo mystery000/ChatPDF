@@ -25,7 +25,7 @@ const ChatInputBox = ({ sendANewMessage }) => {
     }
 
     return (
-        <div className="px-6 py-3 bg-white w-100 overflow-hidden rounded-bl-xl rounded-br-xla">
+        <div className="py-3 bg-white w-full overflow-hidden rounded-bl-xl rounded-br-xla self-center max-w-3xl">
             <div className="flex items-center">
                 <div className="flex-1">
                     <DebouncedInput

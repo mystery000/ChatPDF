@@ -22,9 +22,7 @@ const App = () => {
                 </div>
                 <div className="w-full">
                     <Header />
-                    <div className="px-0 sm:px-[10%]">
-                        <Chat documentId={documentId} />
-                    </div>
+                    <Chat documentId={documentId} />
                 </div>
             </div>
         </MainLayout>
