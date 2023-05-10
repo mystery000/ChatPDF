@@ -3,33 +3,30 @@ import { useState } from 'react'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
 import Header from '../components/Header'
-import { ApiKeyProvider } from '../context/ApiKeyContext'
 
 const App = () => {
-    const [collectionId, setCollectionId] = useState('')
+    const [documentId, setDocumentId] = useState('src_s31d9cr0J6jvSPCcWFYhB')
 
-    const onSelectPropertyHandler = (collectionId) => {
-        setCollectionId(collectionId)
+    const onSelectDocumentHandler = (documentId) => {
+        setDocumentId(documentId)
     }
 
     return (
-        <ApiKeyProvider value="Bearer 370bde20-db9b-4f07-ad0e-377f75e43581">
-            <MainLayout>
-                <div className="flex">
-                    <div className="flex-none h-screen py-4 w-0 sm:w-64 bg-[#001529] text-[rgba(255,255,255,0.65)] overflow-y-auto">
-                        <SideBar
-                            onSelectPropertyHandler={onSelectPropertyHandler}
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Header />
-                        <div className="px-0 sm:px-[10%]">
-                            <Chat collectionId={collectionId} />
-                        </div>
+        <MainLayout>
+            <div className="flex">
+                <div className="flex-none h-screen py-4 w-0 sm:w-64 bg-[#001529] text-[rgba(255,255,255,0.65)] overflow-y-auto">
+                    <SideBar
+                        onSelectDocumentHandler={onSelectDocumentHandler}
+                    />
+                </div>
+                <div className="w-full">
+                    <Header />
+                    <div className="px-0 sm:px-[10%]">
+                        <Chat documentId={documentId} />
                     </div>
                 </div>
-            </MainLayout>
-        </ApiKeyProvider>
+            </div>
+        </MainLayout>
     )
 }
 

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
 import { HiPaperAirplane } from 'react-icons/hi'
@@ -13,13 +14,7 @@ const ChatInputBox = ({ sendANewMessage }) => {
 
     const doSendMessage = () => {
         if (newMessage && newMessage.length > 0) {
-            const newMessagePayload = {
-                sentAt: new Date(),
-                sentBy: 'Julian Sarokin',
-                isChatOwner: true,
-                text: newMessage,
-            }
-            sendANewMessage(newMessagePayload)
+            sendANewMessage(newMessage)
             setNewMessage('')
         }
     }

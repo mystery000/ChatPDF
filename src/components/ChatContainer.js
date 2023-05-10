@@ -1,26 +1,23 @@
 import Chat from './Chat'
-import React, { useState, useEffect } from 'react'
-import DocumentList from './DocumentList'
+import React, { useState } from 'react'
 
-const App = ({ properties, onSelectPropertyHandler }) => {
-    const [collectionId, setCollectionId] = useState('')
+const App = ({ documents, onSelectDocumentHandler }) => {
+    const [activeDocumentId, setActiveDocumentId] = useState('')
 
-    const onChangeHandler = (propertyId) => {
-        onSelectPropertyHandler(propertyId)
-        setCollectionId(propertyId)
+    const onChangeHandler = (activeDocumentId) => {
+        onSelectDocumentHandler(activeDocumentId)
+        setActiveDocumentId(activeDocumentId)
     }
 
     return (
         <>
-            {properties.map((property, index) => (
+            {documents.map((document, index) => (
                 <Chat
                     key={index}
-                    active={collectionId === property.id}
-                    property={property}
+                    active={activeDocumentId === document.sourceId}
+                    document={document}
                     onChangeHandler={onChangeHandler}
-                >
-                    {/* <DocumentList collectionID={property.id} /> */}
-                </Chat>
+                ></Chat>
             ))}
         </>
     )

@@ -1,52 +1,63 @@
 import axios from 'axios'
+import config from '../config'
 import React, { useEffect, useState } from 'react'
-import ChatHeader from './ChatHeader/ChatHeader'
 import ChatContent from './ChatContent/ChatContent'
 import ChatInputBox from './ChatInputBox/ChatInputBox'
-import { useGetMessages } from '../hooks/useGetMessages'
 
-const Chat = ({ collectionId }) => {
-    /** Simulate a hook fetching the data */
-    const { messages } = useGetMessages(collectionId)
+const options = {
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: config.ACCESS_TOKEN,
+    },
+}
+
+const Chat = ({ documentId }) => {
     const [chatMessages, setChatMessages] = useState([])
-
-    useEffect(() => {
-        /** State to control new messages */
-        setChatMessages(messages)
-    }, [collectionId])
 
     /** Create a new message */
     const sendANewMessage = (message) => {
-        setChatMessages((prevMessages) => [...prevMessages, message])
+        const data = {
+            sourceId: documentId,
+            messages: [
+                {
+                    role: 'user',
+                    content: message,
+                },
+            ],
+        }
+        axios
+            .post(`${config.API_URL}/api/chats/message`, data, options)
+            .then((res) => {
+                const chatPDFMsg = res.data.data.chatPDFMsg
+                setChatMessages((prev) => [...prev, chatPDFMsg])
+            })
+            .catch((err) => console.log(err))
+
+        const clientMsg = {
+            sentBy: 'User',
+            sentAt: new Date(),
+            isChatOwner: true,
+            text: message,
+        }
+        setChatMessages((prev) => [...prev, clientMsg])
+    }
+
+    useEffect(() => {
         // query document to get answery from Grain API, then add answer to state
         axios
-            .post(
-                `https://api.usegrain.co/v1/collections/${collectionId}/query`,
-                { query: message.text },
-                {
-                    headers: {
-                        Authorization:
-                            'Bearer 370bde20-db9b-4f07-ad0e-377f75e43581',
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
-            .then((response) => {
-                const newMessagePayload = {
-                    sentAt: new Date(),
-                    sentBy: 'PropManager.ai',
-                    isChatOwner: false,
-                    text: response.data.result,
-                }
-                setChatMessages((prevMessages) => [
-                    ...prevMessages,
-                    newMessagePayload,
-                ])
+            .get(`${config.API_URL}/api/sources/get/${documentId}/messages`, {
+                headers: {
+                    Authorization: config.ACCESS_TOKEN,
+                },
+            })
+            .then((res) => {
+                setChatMessages(res.data.data)
             })
             .catch((error) => {
+                setChatMessages([])
                 console.log(error)
             })
-    }
+    }, [documentId])
 
     return (
         <div className="max-w-full mx-auto mt-2">

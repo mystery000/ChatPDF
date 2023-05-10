@@ -1,45 +1,46 @@
 import axios from 'axios'
-import ApiKeyContext from '../context/ApiKeyContext'
-import { useContext, useEffect, useState } from 'react'
+import config from '../config'
+import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
-const App = ({ onSelectPropertyHandler }) => {
-    const [properties, setProperties] = useState([])
-
-    const ApiKey = useContext(ApiKeyContext)
+const App = ({ onSelectDocumentHandler }) => {
+    const [documents, setDocuments] = useState([])
 
     useEffect(() => {
         axios
-            .get('https://api.usegrain.co/v1/collections/list', {
+            .get(`${config.API_URL}/api/sources/get`, {
                 headers: {
-                    Authorization: ApiKey,
+                    Authorization: config.ACCESS_TOKEN,
                 },
             })
-            .then((res) => setProperties(res.data.collections))
-            .catch((error) =>
+            .then((res) => {
+                setDocuments(res.data.data)
+            })
+            .catch((error) => {
+                setDocuments([])
                 console.log(
                     'Failed to call Grain API to get list of collections.'
                 )
-            )
-    }, [ApiKey])
+            })
+    })
 
-    const onUploadHandler = (property) => {
-        const newProperty = {
-            id: property.id,
-            name: property.name,
+    const onUploadHandler = (document) => {
+        const newDocument = {
+            sourceId: document.sourceId,
+            name: document.name,
         }
-        setProperties((prev) => [...prev, newProperty])
+        setDocuments((prev) => [...prev, newDocument])
     }
 
     return (
         <>
-            <div className="text-center">
+            {/* <div className="text-center">
                 <FileUploadModal onUploadHandler={onUploadHandler} />
-            </div>
+            </div> */}
             <ChatContainer
-                properties={properties}
-                onSelectPropertyHandler={onSelectPropertyHandler}
+                documents={documents}
+                onSelectDocumentHandler={onSelectDocumentHandler}
             />
         </>
     )
