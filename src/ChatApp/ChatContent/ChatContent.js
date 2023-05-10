@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Avatar from '../Avatar/Avatar'
 
 const ChatContent = ({ messages }) => {
+    const chatPanelElement = useRef()
+    useEffect(() => {
+        const scrollingElement = chatPanelElement.current
+        scrollingElement.scrollTop = scrollingElement.scrollHeight
+    }, [messages])
     return (
-        <div className="h-chat-content grow-1 w-full  overflow-auto flex justify-center">
+        <div
+            className="h-chat-content grow-1 w-full  overflow-auto flex justify-center"
+            ref={chatPanelElement}
+        >
             <div className="w-full max-w-3xl ">
                 {messages.map((message, index) => (
                     <div
