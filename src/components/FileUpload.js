@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 const App = ({ onSelectHandler }) => {
     const onChangeHandler = (event) => {
         onSelectHandler(event.target.files[0])
