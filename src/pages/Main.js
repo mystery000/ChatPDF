@@ -14,7 +14,7 @@ const App = () => {
     return (
         <MainLayout>
             <div className="flex">
-                <div className="flex-none h-screen py-4 w-0 sm:w-64 bg-[#001529] text-[rgba(255,255,255,0.65)] overflow-y-auto">
+                <div className="flex-none h-screen pb-4 w-0 sm:w-64 bg-[#001529] text-[rgba(255,255,255,0.65)] overflow-y-auto">
                     <SideBar
                         documentId={documentId}
                         onSelectDocumentHandler={onSelectDocumentHandler}

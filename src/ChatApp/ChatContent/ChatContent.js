@@ -27,12 +27,12 @@ const ChatContent = ({ messages }) => {
                                 message.isChatOwner ? 'order-2' : 'order-1'
                             }`}
                         >
-                            <Avatar />
+                            {/* <Avatar /> */}
                         </div>
                         <div
-                            className={`px-4 py-3 w-fit lg:max-w-lg flex flex-col  rounded-lg  shadow-md ${
+                            className={`px-3 py-[6px] w-fit lg:max-w-lg flex flex-col  rounded-lg  shadow-sm ${
                                 message.isChatOwner
-                                    ? 'order-1 mr-2 bg-[#1677ff] shadow-[#1677ff]/40'
+                                    ? 'order-1 mr-2 bg-[#1677ff] '
                                     : 'order-2 ml-2 bg-white/80 shadow-slate-200 border'
                             }`}
                         >
@@ -43,11 +43,11 @@ const ChatContent = ({ messages }) => {
                                         : 'text-gray-400'
                                 }`}
                             >
-                                {message.sentBy}&nbsp;-&nbsp;
+                                {/* {message.sentBy}&nbsp;-&nbsp;
                                 {new Date(message.sentAt).toLocaleDateString(
                                     'en-US',
                                     { hour: '2-digit', minute: '2-digit' }
-                                )}
+                                )} */}
                             </span>
                             <span
                                 className={`text-sm ${
