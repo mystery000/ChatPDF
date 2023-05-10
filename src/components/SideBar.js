@@ -35,9 +35,9 @@ const App = ({ onSelectDocumentHandler }) => {
 
     return (
         <>
-            {/* <div className="text-center">
+            <div className="text-center">
                 <FileUploadModal onUploadHandler={onUploadHandler} />
-            </div> */}
+            </div>
             <ChatContainer
                 documents={documents}
                 onSelectDocumentHandler={onSelectDocumentHandler}

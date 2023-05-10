@@ -1,72 +1,44 @@
 import axios from 'axios'
+import config from '../config'
 import FormData from 'form-data'
 import FileUpload from './FileUpload'
 import React, { useState } from 'react'
 
 export default function App({ onUploadHandler }) {
-    const [propertyName, setPropertyName] = useState('')
+    const [documentName, setDocumentName] = useState('')
     const [showModal, setShowModal] = useState(false)
     const [selectedFile, setSelectedFile] = useState(undefined)
 
     const onSelectHandler = (file) => {
         setSelectedFile(file)
-        setPropertyName(file.name)
+        setDocumentName(file.name)
     }
 
-    const onUploadPropertyHandler = () => {
+    const onUploadPropertyHandler = async () => {
         setShowModal(false)
-        if (selectedFile && propertyName.length > 0) {
-            // Create Collection: Create a new collection that you can upload documnet to and query.
-            axios
-                .post(
-                    'https://api.usegrain.co/v1/collections/create',
-                    { name: propertyName },
+        if (selectedFile && documentName.length > 0) {
+            try {
+                const form = new FormData()
+                form.append('file', selectedFile)
+                form.append('name', documentName)
+                const response = await axios.post(
+                    `${config.API_URL}/api/sources/add-file`,
+                    form,
                     {
                         headers: {
-                            Authorization:
-                                'Bearer 370bde20-db9b-4f07-ad0e-377f75e43581',
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'multipart/form-data',
+                            Authorization: config.ACCESS_TOKEN,
                         },
                     }
                 )
-                .then((response) => {
-                    if (response.status === 200) {
-                        const collection_id = response.data.id
-                        const collection_name = response.data.name
-                        // Collection Upload: Uploads a document to the specified collection
-                        const form = new FormData()
-                        form.append('file', selectedFile)
-                        axios
-                            .post(
-                                `https://api.usegrain.co/v1/collections/${collection_id}/upload`,
-                                form,
-                                {
-                                    headers: {
-                                        Authorization:
-                                            'Bearer 370bde20-db9b-4f07-ad0e-377f75e43581',
-                                        'Content-Type': 'multipart/form-data',
-                                    },
-                                }
-                            )
-                            .then((response) => {
-                                if (response.status === 200) {
-                                    onUploadHandler({
-                                        id: collection_id,
-                                        name: collection_name,
-                                    })
-                                    setPropertyName('')
-                                }
-                            })
-                            .catch((error) => {
-                                console.error(
-                                    'Failed to call the Grain API: Collection Upload'
-                                )
-                            })
-                    }
+                const sourceId = response.data.data
+                onUploadHandler({
+                    sourceId: sourceId,
+                    name: documentName,
                 })
-                .catch((error) =>
-                    console.log('Failed to call Grain API: Create Collection')
-                )
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
 
@@ -95,11 +67,11 @@ export default function App({ onUploadHandler }) {
                                 <div className="relative p-6 flex-auto">
                                     <input
                                         type="text"
-                                        value={propertyName ?? ''}
+                                        value={documentName ?? ''}
                                         placeholder="Property Name"
                                         className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 min-w-[500px]"
                                         onChange={(e) =>
-                                            setPropertyName(e.target.value)
+                                            setDocumentName(e.target.value)
                                         }
                                     />
                                     <FileUpload
