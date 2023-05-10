@@ -1,13 +1,17 @@
 import Chat from './Chat'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const App = ({ documents, onSelectDocumentHandler }) => {
+const App = ({ documents, documentId, onSelectDocumentHandler }) => {
     const [activeDocumentId, setActiveDocumentId] = useState('')
 
     const onChangeHandler = (activeDocumentId) => {
         onSelectDocumentHandler(activeDocumentId)
         setActiveDocumentId(activeDocumentId)
     }
+
+    useEffect(() => {
+        setActiveDocumentId(documentId)
+    }, [documentId])
 
     return (
         <>

@@ -21,7 +21,7 @@ const ChatContent = ({ messages }) => {
                     <div
                         className={`px-4 py-3 w-fit lg:max-w-lg flex flex-col  rounded-lg  shadow-md ${
                             message.isChatOwner
-                                ? 'order-1 mr-2 bg-sky-500 shadow-blue-500/50'
+                                ? 'order-1 mr-2 bg-[#1677ff] shadow-[#1677ff]/40'
                                 : 'order-2 ml-2 bg-white/80 shadow-slate-200 border'
                         }`}
                     >

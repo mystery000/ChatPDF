@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
-const App = ({ onSelectDocumentHandler }) => {
+const App = ({ documentId, onSelectDocumentHandler }) => {
     const [documents, setDocuments] = useState([])
 
     useEffect(() => {
@@ -40,6 +40,7 @@ const App = ({ onSelectDocumentHandler }) => {
             </div>
             <ChatContainer
                 documents={documents}
+                documentId={documentId}
                 onSelectDocumentHandler={onSelectDocumentHandler}
             />
         </>
