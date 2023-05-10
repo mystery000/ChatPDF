@@ -23,7 +23,7 @@ const App = ({ onSelectDocumentHandler }) => {
                     'Failed to call Grain API to get list of collections.'
                 )
             })
-    })
+    }, [])
 
     const onUploadHandler = (document) => {
         const newDocument = {
