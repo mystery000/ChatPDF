@@ -1,12 +1,15 @@
+// import Avatar from '../Avatar/Avatar'
 import React, { useEffect, useRef } from 'react'
-import Avatar from '../Avatar/Avatar'
+import TypingAnimationText from './TypingAnimationText'
 
 const ChatContent = ({ messages }) => {
     const chatPanelElement = useRef()
+
     useEffect(() => {
         const scrollingElement = chatPanelElement.current
-        scrollingElement.scrollTop = scrollingElement.scrollHeight
+        scrollingElement.scrollTop = 10000000
     }, [messages])
+
     return (
         <div
             className="h-chat-content grow-1 w-full  overflow-auto flex justify-center"
@@ -56,7 +59,15 @@ const ChatContent = ({ messages }) => {
                                         : 'text-gray-800'
                                 }`}
                             >
-                                {message.text}
+                                <TypingAnimationText
+                                    message={message}
+                                    isLastMessage={
+                                        messages.length == index + 1
+                                            ? true
+                                            : false
+                                    }
+                                    chatPanelElement={chatPanelElement}
+                                />
                             </span>
                         </div>
                     </div>

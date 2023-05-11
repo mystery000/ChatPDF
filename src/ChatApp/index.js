@@ -29,6 +29,7 @@ const Chat = ({ documentId }) => {
             .post(`${config.API_URL}/api/chats/message`, data, options)
             .then((res) => {
                 const chatPDFMsg = res.data.data.chatPDFMsg
+                chatPDFMsg.typingAnimation = true
                 setChatMessages((prev) => [...prev, chatPDFMsg])
             })
             .catch((err) => console.log(err))
