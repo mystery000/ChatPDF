@@ -30,7 +30,11 @@ const Chat = ({ documentId }) => {
             .then((res) => {
                 const chatPDFMsg = res.data.data.chatPDFMsg
                 chatPDFMsg.typingAnimation = true
-                setChatMessages((prev) => [...prev, chatPDFMsg])
+                setChatMessages((prev) => {
+                    const messages = [...prev]
+                    messages.pop()
+                    return [...messages, chatPDFMsg]
+                })
             })
             .catch((err) => console.log(err))
 
@@ -40,7 +44,12 @@ const Chat = ({ documentId }) => {
             isChatOwner: true,
             text: message,
         }
-        setChatMessages((prev) => [...prev, clientMsg])
+        const loadingMsg = {
+            isChatOwner: false,
+            loading: true,
+            sentAt: new Date(),
+        }
+        setChatMessages((prev) => [...prev, clientMsg, loadingMsg])
     }
 
     useEffect(() => {

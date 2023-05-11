@@ -1,4 +1,5 @@
 // import Avatar from '../Avatar/Avatar'
+import ReactLoading from 'react-loading'
 import React, { useEffect, useRef } from 'react'
 import TypingAnimationText from './TypingAnimationText'
 
@@ -59,15 +60,24 @@ const ChatContent = ({ messages }) => {
                                         : 'text-gray-800'
                                 }`}
                             >
-                                <TypingAnimationText
-                                    message={message}
-                                    isLastMessage={
-                                        messages.length == index + 1
-                                            ? true
-                                            : false
-                                    }
-                                    chatPanelElement={chatPanelElement}
-                                />
+                                {!!message.loading ? (
+                                    <ReactLoading
+                                        type={'spokes'}
+                                        color={'blue'}
+                                        height={20}
+                                        width={20}
+                                    />
+                                ) : (
+                                    <TypingAnimationText
+                                        message={message}
+                                        isLastMessage={
+                                            messages.length == index + 1
+                                                ? true
+                                                : false
+                                        }
+                                        chatPanelElement={chatPanelElement}
+                                    />
+                                )}
                             </span>
                         </div>
                     </div>

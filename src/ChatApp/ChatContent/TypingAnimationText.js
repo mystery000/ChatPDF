@@ -10,7 +10,7 @@ const TypingAnimationText = ({ message, isLastMessage, chatPanelElement }) => {
                 setTimeout(() => {
                     setText(text + message.text[index])
                     setIndex(index + 1)
-                }, 40)
+                }, 30)
             } else {
                 setText(message.text)
             }
