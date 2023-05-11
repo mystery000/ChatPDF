@@ -7,7 +7,7 @@ const ChatContent = ({ messages }) => {
 
     useEffect(() => {
         const scrollingElement = chatPanelElement.current
-        scrollingElement.scrollTop = 10000000
+        scrollingElement.scrollTop = scrollingElement.scrollHeight
     }, [messages])
 
     return (
