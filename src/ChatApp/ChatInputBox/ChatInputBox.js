@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { HiPaperAirplane } from 'react-icons/hi'
 import DebouncedInput from './DebouncedInput'
 
-const ChatInputBox = ({ sendANewMessage }) => {
+const ChatInputBox = ({ sendANewMessage, loading }) => {
     const [newMessage, setNewMessage] = useState('')
 
     /**
@@ -33,6 +33,7 @@ const ChatInputBox = ({ sendANewMessage }) => {
                         debounce={100}
                         onChange={(value) => setNewMessage(value)}
                         onKeyDownHandler={onKeyDownHandler}
+                        loading={loading}
                     />
                 </div>
                 <div

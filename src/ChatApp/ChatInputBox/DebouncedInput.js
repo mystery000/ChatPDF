@@ -6,6 +6,7 @@ const DebouncedInput = ({
     onChange,
     debounce = 500,
     onKeyDownHandler,
+    loading,
     ...props
 }) => {
     const [value, setValue] = useState(initialValue)
@@ -32,6 +33,7 @@ const DebouncedInput = ({
                 onChange={(e) => setValue(e.target.value)}
                 {...props}
                 onKeyDown={onKeyDownHandler}
+                disabled={loading}
             />
         </>
     )

@@ -13,7 +13,7 @@ const options = {
 
 const Chat = ({ documentId }) => {
     const [chatMessages, setChatMessages] = useState([])
-
+    const [loading, setLoading] = useState(false)
     /** Create a new message */
     const sendANewMessage = (message) => {
         const data = {
@@ -25,6 +25,7 @@ const Chat = ({ documentId }) => {
                 },
             ],
         }
+        setLoading(true)
         axios
             .post(`${config.API_URL}/api/chats/message`, data, options)
             .then((res) => {
@@ -35,8 +36,12 @@ const Chat = ({ documentId }) => {
                     messages.pop()
                     return [...messages, chatPDFMsg]
                 })
+                setLoading(false)
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                console.log(err)
+                setLoading(false)
+            })
 
         const clientMsg = {
             sentBy: 'User',
@@ -73,7 +78,10 @@ const Chat = ({ documentId }) => {
         <div className="max-w-full mx-auto mt-2">
             <div className="bg-white flex flex-col">
                 <ChatContent messages={chatMessages} />
-                <ChatInputBox sendANewMessage={sendANewMessage} />
+                <ChatInputBox
+                    sendANewMessage={sendANewMessage}
+                    loading={loading}
+                />
             </div>
         </div>
     )
