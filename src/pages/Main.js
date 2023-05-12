@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Chat from '../ChatApp'
 import config from '../config'
-import { useEffect, useState } from 'react'
+import { message } from 'antd'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
@@ -10,6 +11,7 @@ const App = () => {
     const [documentId, setDocumentId] = useState('')
     const [deleted, setDeleted] = useState(0)
     const [documents, setDocuments] = useState([])
+    const [messageApi, contextHolder] = message.useMessage()
 
     useEffect(() => {
         axios
@@ -68,6 +70,7 @@ const App = () => {
                     },
                 }
             )
+            messageApi.success('Chat was deleted')
             setDeleted(deleted + 1)
         } catch (e) {
             console.log(e)
@@ -90,6 +93,7 @@ const App = () => {
                             onDeleteHandler={onDeleteHandler}
                         />
                         <Chat documentId={documentId} />
+                        {contextHolder}
                     </div>
                 ) : (
                     <div className="text-center w-full text-2xl">
