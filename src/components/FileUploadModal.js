@@ -77,7 +77,7 @@ export default function App({ onUploadHandler }) {
             >
                 <Input
                     placeholder="Property name..."
-                    className="mt-2 mb-8"
+                    className="mt-2 mb-4"
                     onChange={handleChange}
                     value={documentName}
                 />

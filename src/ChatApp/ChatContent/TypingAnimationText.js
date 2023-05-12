@@ -5,6 +5,10 @@ const TypingAnimationText = ({ message, isLastMessage, chatPanelElement }) => {
     const [index, setIndex] = useState(0)
 
     useEffect(() => {
+        setText(message.text)
+    }, [message])
+
+    useEffect(() => {
         if (isLastMessage) {
             if (!!message.typingAnimation && index < message.text.length) {
                 setTimeout(() => {
