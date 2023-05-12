@@ -8,7 +8,7 @@ import MainLayout from '../layout/MainLayout'
 
 const App = () => {
     const [documentId, setDocumentId] = useState('')
-    const [updated, setUpdated] = useState(0)
+    const [deleted, setDeleted] = useState(0)
     const [documents, setDocuments] = useState([])
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const App = () => {
                     'Failed to call Grain API to get list of collections.'
                 )
             })
-    }, [updated])
+    }, [deleted])
 
     const onSelectDocumentHandler = (documentId) => {
         setDocumentId(documentId)
@@ -47,7 +47,13 @@ const App = () => {
                     },
                 }
             )
-            setUpdated(updated + 1)
+            const newDocuments = documents.map((document) => {
+                if (document.sourceId === documentId) {
+                    document.name = name
+                }
+                return document
+            })
+            setDocuments(newDocuments)
         } catch (e) {
             console.log(e)
         }
@@ -62,7 +68,7 @@ const App = () => {
                     },
                 }
             )
-            setUpdated(updated + 1)
+            setDeleted(deleted + 1)
         } catch (e) {
             console.log(e)
         }

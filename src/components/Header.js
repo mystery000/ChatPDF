@@ -5,15 +5,20 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { Input, Modal, Popconfirm } from 'antd'
 
 const Header = ({ onRenameHandler, onDeleteHandler }) => {
-    const [modal1Open, setModal1Open] = useState(false)
+    const [renameModalOpen, setRenameModalOpen] = useState(false)
     const [chatName, setChatName] = useState('')
 
     const handleChange = (e) => {
         setChatName(e.target.value)
     }
-    const handleSubmit = () => {
+    const onOkRenameHandler = () => {
         onRenameHandler(chatName)
-        setModal1Open(false)
+        setChatName('')
+        setRenameModalOpen(false)
+    }
+    const onCancelRenameHandler = () => {
+        setChatName('')
+        setRenameModalOpen(false)
     }
     return (
         <>
@@ -58,7 +63,7 @@ const Header = ({ onRenameHandler, onDeleteHandler }) => {
                         <span
                             title="Rename Chat"
                             className="cursor-pointer inline-block px-1"
-                            onClick={() => setModal1Open(true)}
+                            onClick={() => setRenameModalOpen(true)}
                         >
                             <AiOutlineEdit size={20} />
                         </span>
@@ -67,9 +72,9 @@ const Header = ({ onRenameHandler, onDeleteHandler }) => {
                             style={{
                                 top: '10%',
                             }}
-                            open={modal1Open}
-                            onOk={handleSubmit}
-                            onCancel={() => setModal1Open(false)}
+                            open={renameModalOpen}
+                            onOk={onOkRenameHandler}
+                            onCancel={onCancelRenameHandler}
                             okButtonProps={{
                                 className: 'bg-blue-600',
                             }}

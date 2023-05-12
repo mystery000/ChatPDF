@@ -17,6 +17,7 @@ const App = ({ documents, documentId, onSelectDocumentHandler }) => {
         }
         documents.push(newDocument)
         setActiveDocument(newDocument.sourceId)
+        onSelectDocumentHandler(newDocument.sourceId)
     }
 
     return (
