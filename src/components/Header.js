@@ -42,7 +42,7 @@ const Header = ({ onRenameHandler, onDeleteHandler }) => {
                             placement="bottomLeft"
                             title={'Delete Chat'}
                             description={
-                                'Are you really want to delete this chat?'
+                                'Are you sure you want to delete this chat?'
                             }
                             onConfirm={onDeleteHandler}
                             okText="Yes"
