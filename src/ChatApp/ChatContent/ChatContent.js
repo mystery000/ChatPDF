@@ -63,7 +63,7 @@ const ChatContent = ({ messages }) => {
                                 {!!message.loading ? (
                                     <ReactLoading
                                         type={'spokes'}
-                                        color={'blue'}
+                                        color={'black'}
                                         height={20}
                                         width={20}
                                     />

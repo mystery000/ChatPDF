@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
-const App = ({ documentId, onSelectDocumentHandler }) => {
+const App = ({ documentId, onSelectDocumentHandler, updated }) => {
     const [documents, setDocuments] = useState([])
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const App = ({ documentId, onSelectDocumentHandler }) => {
                     'Failed to call Grain API to get list of collections.'
                 )
             })
-    }, [])
+    }, [updated])
 
     const onUploadHandler = (document) => {
         const newDocument = {
