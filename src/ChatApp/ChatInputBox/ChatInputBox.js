@@ -38,7 +38,7 @@ const ChatInputBox = ({ sendANewMessage }) => {
                 <div
                     type="button"
                     disabled={!newMessage || newMessage.length === 0}
-                    className="p-[11px] text-ms font-medium text-center text-white bg-sky-500 hover:bg-sky-600 focus:ring-1 focus:outline-none disabled:opacity-50 mx-0"
+                    className="p-[11px] text-ms font-medium text-center text-white bg-sky-500 hover:bg-sky-600 focus:ring-1 focus:outline-none disabled:opacity-50 mx-0 cursor-pointer"
                     onClick={() => doSendMessage()}
                 >
                     <HiPaperAirplane className="w-4 h-4 rotate-90" />

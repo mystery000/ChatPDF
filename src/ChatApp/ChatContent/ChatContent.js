@@ -9,12 +9,17 @@ const ChatContent = ({ messages }) => {
 
     useEffect(() => {
         const scrollingElement = chatPanelElement.current
-        scrollingElement.scrollTop = scrollingElement.scrollHeight
+        setTimeout(() => {
+            scrollingElement.scrollTop = scrollingElement.scrollHeight
+        }, 100)
+        return () => {
+            // scrollingElement.scrollTop = 0
+        }
     }, [messages])
 
     return (
         <div
-            className="h-chat-content grow-1 w-full  overflow-auto flex justify-center"
+            className="h-chat-content grow-1 w-full  overflow-auto flex justify-center scroll-smooth"
             ref={chatPanelElement}
         >
             <div className="w-full max-w-3xl ">

@@ -2,58 +2,15 @@ import axios from 'axios'
 import config from '../config'
 import FormData from 'form-data'
 import React, { useState } from 'react'
-import { Alert, Input, Modal, Upload } from 'antd'
+import { Form, Input, Modal, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
-const { Dragger } = Upload
 
 export default function App({ onUploadHandler }) {
-    const [documentName, setDocumentName] = useState('')
     const [showModal, setShowModal] = useState(false)
-    const [selectedFile, setSelectedFile] = useState([])
-    const [errorMsg, setErrorMsg] = useState('')
-
-    const onChangeHandler = ({ file }) => {
-        setSelectedFile([file])
-        setDocumentName(file.name)
-    }
-    const onCancelUploadModal = () => {
-        setShowModal(false)
-        setDocumentName('')
-        setSelectedFile([])
-    }
-    const onUploadPropertyHandler = async () => {
-        if (selectedFile.length && documentName) {
-            try {
-                const form = new FormData()
-                form.append('file', selectedFile[0])
-                form.append('name', documentName)
-                const response = await axios.post(
-                    `${config.API_URL}/api/sources/add-file`,
-                    form,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            Authorization: config.ACCESS_TOKEN,
-                        },
-                    }
-                )
-                const sourceId = response.data.data
-                onUploadHandler({
-                    sourceId: sourceId,
-                    name: documentName,
-                })
-            } catch (err) {
-                console.log(err)
-            }
-        } else {
-            setErrorMsg('Please fill all fields.')
-        }
-        onCancelUploadModal()
-    }
-
-    const handleChange = (e) => {
-        setDocumentName(e.target.value)
-    }
+    const [form] = Form.useForm()
+    const [uploadedFiles, setUploadedFiles] = useState([])
+    const [messageApi, contextHolder] = message.useMessage()
+    const [loading, setLoading] = useState(false)
     return (
         <>
             <button
@@ -63,37 +20,99 @@ export default function App({ onUploadHandler }) {
             >
                 + Add Property
             </button>
+
             <Modal
-                title="Add a property"
-                style={{
-                    top: '10%',
-                }}
                 open={showModal}
-                onOk={onUploadPropertyHandler}
-                onCancel={onCancelUploadModal}
-                okButtonProps={{
-                    className: 'bg-blue-600',
+                title="Add a property"
+                okText="Upload"
+                cancelText="Cancel"
+                onCancel={() => setShowModal(false)}
+                onOk={() => {
+                    form.validateFields()
+                        .then(async (values) => {
+                            const propertyName = values.propertyName
+                            const file = values.dragger.file
+                            try {
+                                const form = new FormData()
+                                form.append('file', file)
+                                form.append('name', propertyName)
+                                setLoading(true)
+                                const response = await axios.post(
+                                    `${config.API_URL}/api/sources/add-file`,
+                                    form,
+                                    {
+                                        headers: {
+                                            'Content-Type':
+                                                'multipart/form-data',
+                                            Authorization: config.ACCESS_TOKEN,
+                                        },
+                                    }
+                                )
+                                const sourceId = response.data.data
+                                onUploadHandler({
+                                    sourceId: sourceId,
+                                    name: propertyName,
+                                })
+                                setLoading(false)
+                            } catch (err) {
+                                console.log(err)
+                                setLoading(false)
+                            }
+
+                            form.resetFields()
+                            setUploadedFiles([])
+                            setShowModal(false)
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info)
+                            messageApi.warning('Please upload a PDF file')
+                        })
                 }}
+                okButtonProps={{ className: 'bg-blue-600', loading: loading }}
             >
-                <Input
-                    placeholder="Property name..."
-                    className="mt-2 mb-4"
-                    onChange={handleChange}
-                    value={documentName}
-                />
-                <Dragger
-                    beforeUpload={() => false}
-                    onChange={onChangeHandler}
-                    accept="application/pdf"
-                    fileList={selectedFile}
-                >
-                    <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">
-                        Click or drag file to this area to upload
-                    </p>
-                </Dragger>
+                <Form form={form} layout="vertical">
+                    <Form.Item
+                        name="propertyName"
+                        label="Property Name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input the name of property',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="dragger" label="dragger" noStyle>
+                        <Upload.Dragger
+                            name="files"
+                            beforeUpload={() => false}
+                            accept="application/pdf"
+                            fileList={uploadedFiles}
+                            onChange={({ fileList }) => {
+                                const filterdFiles = fileList.filter(
+                                    (file) => file.type === 'application/pdf'
+                                )
+                                if (fileList[0] && !filterdFiles.length) {
+                                    form.resetFields(['dragger'])
+                                    messageApi.warning(
+                                        'Please selece PDF file.'
+                                    )
+                                }
+                                setUploadedFiles(filterdFiles)
+                            }}
+                            maxCount={1}
+                        >
+                            <p className="ant-upload-drag-icon">
+                                <InboxOutlined />
+                            </p>
+                            <p className="ant-upload-text">
+                                Click or drag file to this area to upload
+                            </p>
+                        </Upload.Dragger>
+                    </Form.Item>
+                </Form>
+                {contextHolder}
             </Modal>
         </>
     )
