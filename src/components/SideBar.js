@@ -4,33 +4,15 @@ import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
-const App = ({ documentId, onSelectDocumentHandler, updated }) => {
-    const [documents, setDocuments] = useState([])
-
-    useEffect(() => {
-        axios
-            .get(`${config.API_URL}/api/sources/get`, {
-                headers: {
-                    Authorization: config.ACCESS_TOKEN,
-                },
-            })
-            .then((res) => {
-                setDocuments(res.data.data)
-            })
-            .catch((error) => {
-                setDocuments([])
-                console.log(
-                    'Failed to call Grain API to get list of collections.'
-                )
-            })
-    }, [updated])
+const App = ({ documents, documentId, onSelectDocumentHandler }) => {
+    const chats = documents
 
     const onUploadHandler = (document) => {
         const newDocument = {
             sourceId: document.sourceId,
             name: document.name,
         }
-        setDocuments((prev) => [...prev, newDocument])
+        chats.push(newDocument)
     }
 
     return (
@@ -39,7 +21,7 @@ const App = ({ documentId, onSelectDocumentHandler, updated }) => {
                 <FileUploadModal onUploadHandler={onUploadHandler} />
             </div>
             <ChatContainer
-                documents={documents}
+                documents={chats}
                 documentId={documentId}
                 onSelectDocumentHandler={onSelectDocumentHandler}
             />
