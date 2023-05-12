@@ -2,6 +2,7 @@
 import ReactLoading from 'react-loading'
 import React, { useEffect, useRef } from 'react'
 import TypingAnimationText from './TypingAnimationText'
+import PulseLoader from 'react-spinners/PulseLoader'
 
 const ChatContent = ({ messages }) => {
     const chatPanelElement = useRef()
@@ -60,13 +61,8 @@ const ChatContent = ({ messages }) => {
                                         : 'text-gray-800'
                                 }`}
                             >
-                                {!!message.loading ? (
-                                    <ReactLoading
-                                        type={'spokes'}
-                                        color={'black'}
-                                        height={20}
-                                        width={20}
-                                    />
+                                {message.loading ? (
+                                    <PulseLoader color="#0008" size={5} />
                                 ) : (
                                     <TypingAnimationText
                                         message={message}

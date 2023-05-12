@@ -7,7 +7,7 @@ import MainLayout from '../layout/MainLayout'
 import Header from '../components/Header'
 
 const App = () => {
-    const [documentId, setDocumentId] = useState('src_s31d9cr0J6jvSPCcWFYhB')
+    const [documentId, setDocumentId] = useState('')
     const [updated, setUpdated] = useState(0)
 
     const onSelectDocumentHandler = (documentId) => {
