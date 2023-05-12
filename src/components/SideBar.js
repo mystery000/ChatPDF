@@ -5,7 +5,10 @@ import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
 const App = ({ documents, documentId, onSelectDocumentHandler }) => {
-    const [updated, setUpdated] = useState(0)
+    const [activeDocument, setActiveDocument] = useState('')
+    useEffect(() => {
+        setActiveDocument(documentId)
+    }, [documentId])
 
     const onUploadHandler = (document) => {
         const newDocument = {
@@ -13,8 +16,7 @@ const App = ({ documents, documentId, onSelectDocumentHandler }) => {
             name: document.name,
         }
         documents.push(newDocument)
-        documentId = newDocument.sourceId
-        setUpdated(updated + 1)
+        setActiveDocument(newDocument.sourceId)
     }
 
     return (
@@ -24,7 +26,7 @@ const App = ({ documents, documentId, onSelectDocumentHandler }) => {
             </div>
             <ChatContainer
                 documents={documents}
-                documentId={documentId}
+                documentId={activeDocument}
                 onSelectDocumentHandler={onSelectDocumentHandler}
             />
         </>
