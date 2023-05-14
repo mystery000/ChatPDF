@@ -1,5 +1,3 @@
-import axios from 'axios'
-import config from '../config'
 import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'

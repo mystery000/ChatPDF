@@ -1,7 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 import { HiPaperAirplane } from 'react-icons/hi'
-import DebouncedInput from './DebouncedInput'
+import { Button, Input, Space } from 'antd'
+
+const { TextArea } = Input
+
+// import DebouncedInput from './DebouncedInput'
 
 const ChatInputBox = ({ sendANewMessage, loading }) => {
     const [newMessage, setNewMessage] = useState('')
@@ -12,47 +16,44 @@ const ChatInputBox = ({ sendANewMessage, loading }) => {
      */
 
     const doSendMessage = () => {
-        if (newMessage && newMessage.length > 0) {
-            sendANewMessage(newMessage)
+        if (
+            newMessage &&
+            newMessage.length > 0 &&
+            newMessage.replace(/\n/g, '').length > 0
+        ) {
+            sendANewMessage(newMessage.trim())
             setNewMessage('')
         }
     }
 
-    const onKeyDownHandler = (event) => {
-        if (event.key === 'Enter') {
+    const onKeyDownHandler = (e) => {
+        if (!e.shiftKey) {
+            e.preventDefault()
+            if (loading) return
             doSendMessage()
         }
     }
 
     return (
-        <div className="py-3 bg-white w-full overflow-hidden rounded-bl-xl rounded-br-xla self-center max-w-3xl">
-            <div className="flex items-center">
-                <div className="flex-1">
-                    <DebouncedInput
-                        value={newMessage ?? ''}
-                        debounce={100}
-                        onChange={(value) => setNewMessage(value)}
-                        onKeyDownHandler={onKeyDownHandler}
-                        loading={loading}
-                    />
-                </div>
+        <div className="py-3 bg-white w-full rounded-bl-xl rounded-br-xla self-center max-w-3xl">
+            <Space.Compact style={{ width: '100%' }}>
+                <TextArea
+                    allowClear
+                    placeholder="Ask any question."
+                    onPressEnter={onKeyDownHandler}
+                    autoSize={{ maxRows: 8 }}
+                    className="rounded-e-none !pt-[3px]"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                />
                 <div
-                    type="button"
                     disabled={!newMessage || newMessage.length === 0}
-                    className="p-[11px] text-ms font-medium text-center text-white bg-sky-500 hover:bg-sky-600 focus:ring-1 focus:outline-none disabled:opacity-50 mx-0 cursor-pointer"
+                    className="rounded-s-none rounded p-[11px] text-ms font-medium text-center text-white bg-sky-500 hover:bg-sky-600 focus:ring-1 focus:outline-none disabled:opacity-50 mx-0 cursor-pointer flex items-center"
                     onClick={() => doSendMessage()}
                 >
                     <HiPaperAirplane className="w-4 h-4 rotate-90" />
                 </div>
-                {/* <button
-                    type="button"
-                    disabled={!newMessage || newMessage.length === 0}
-                    className="px-3 py-2 text-xs font-medium text-center text-white bg-purple-500 rounded-lg hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 disabled:opacity-50"
-                    onClick={() => doSendMessage()}
-                >
-                    Send
-                </button> */}
-            </div>
+            </Space.Compact>
         </div>
     )
 }

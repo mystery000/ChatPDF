@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import parse from 'html-react-parser'
 
 const TypingAnimationText = ({ message, isLastMessage, chatPanelElement }) => {
     const [text, setText] = useState('')
@@ -25,7 +26,7 @@ const TypingAnimationText = ({ message, isLastMessage, chatPanelElement }) => {
         scrollingElement.scrollTop = scrollingElement.scrollHeight
     }, [index])
 
-    return <>{text}</>
+    return <>{parse(text.replace(/\n/g, '<br />'))}</>
 }
 
 export default TypingAnimationText

@@ -1,9 +1,6 @@
-// import Avatar from '../Avatar/Avatar'
-import ReactLoading from 'react-loading'
 import React, { useEffect, useRef } from 'react'
 import TypingAnimationText from './TypingAnimationText'
 import PulseLoader from 'react-spinners/PulseLoader'
-
 const ChatContent = ({ messages }) => {
     const chatPanelElement = useRef()
 
@@ -14,7 +11,7 @@ const ChatContent = ({ messages }) => {
 
     return (
         <div
-            className="h-chat-content grow-1 w-full  overflow-auto flex justify-center"
+            className="flex-1 w-full overflow-auto flex justify-center"
             ref={chatPanelElement}
         >
             <div className="w-full max-w-3xl ">
@@ -54,7 +51,7 @@ const ChatContent = ({ messages }) => {
                                     { hour: '2-digit', minute: '2-digit' }
                                 )} */}
                             </span>
-                            <span
+                            <p
                                 className={`text-sm ${
                                     message.isChatOwner
                                         ? 'text-white'
@@ -74,7 +71,7 @@ const ChatContent = ({ messages }) => {
                                         chatPanelElement={chatPanelElement}
                                     />
                                 )}
-                            </span>
+                            </p>
                         </div>
                     </div>
                 ))}

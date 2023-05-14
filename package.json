@@ -18,6 +18,7 @@
     "antd": "^5.4.7",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "html-react-parser": "^3.0.16",
     "postcss-cli": "^10.1.0",
     "postcss-nested": "^6.0.1",
     "react": "^18.2.0",
