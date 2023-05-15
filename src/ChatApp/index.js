@@ -76,7 +76,7 @@ const Chat = ({ documentId }) => {
 
     return (
         <div className="max-w-full mx-auto mt-2">
-            <div className="bg-white flex flex-col max-h-[calc(100vh_-_70px)]">
+            <div className="bg-white flex flex-col max-h-[calc(100vh_-_70px)] h-[calc(100vh_-_70px)]">
                 <ChatContent messages={chatMessages} />
                 <ChatInputBox
                     sendANewMessage={sendANewMessage}
