@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
 
-const App = () => {
+const Main = () => {
     const [documentId, setDocumentId] = useState('')
     const [deleted, setDeleted] = useState(0)
     const [documents, setDocuments] = useState([])
@@ -105,4 +105,4 @@ const App = () => {
     )
 }
 
-export default App
+export default Main

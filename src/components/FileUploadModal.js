@@ -96,7 +96,7 @@ export default function App({ onUploadHandler }) {
                                 if (fileList[0] && !filterdFiles.length) {
                                     form.resetFields(['dragger'])
                                     messageApi.warning(
-                                        'Please selece PDF file.'
+                                        'Please select PDF file.'
                                     )
                                 }
                                 setUploadedFiles(filterdFiles)
