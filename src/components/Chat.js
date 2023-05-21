@@ -1,3 +1,4 @@
+import DocumentList from './DocumentList'
 import { useEffect, useState } from 'react'
 import { AiOutlineMessage } from 'react-icons/ai'
 
@@ -28,6 +29,7 @@ const App = ({ source, active, onChangeHandler }) => {
                     </h1>
                 </div>
             </div>
+            {active && <DocumentList sourceId={source.sourceId} />}
         </>
     )
 }
