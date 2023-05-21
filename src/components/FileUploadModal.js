@@ -1,16 +1,18 @@
 import axios from 'axios'
-import config from '../config'
+import Config from '../config'
 import FormData from 'form-data'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Input, Modal, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
 export default function App({ onUploadHandler }) {
+    const { API_URL, ACCESS_TOKEN } = Config
     const [showModal, setShowModal] = useState(false)
     const [form] = Form.useForm()
     const [uploadedFiles, setUploadedFiles] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const [loading, setLoading] = useState(false)
+
     return (
         <>
             <button
@@ -31,24 +33,27 @@ export default function App({ onUploadHandler }) {
                     form.validateFields()
                         .then(async (values) => {
                             const propertyName = values.propertyName
-                            const file = values.dragger.file
+                            const fileList = values.dragger.fileList
                             try {
-                                const form = new FormData()
-                                form.append('file', file)
-                                form.append('name', propertyName)
                                 setLoading(true)
+                                // Create from to upload files into server
+                                const formData = new FormData()
+                                formData.append('sourceName', propertyName)
+                                fileList.forEach(({ originFileObj }) => {
+                                    formData.append('files', originFileObj)
+                                })
                                 const response = await axios.post(
-                                    `${config.API_URL}/api/sources/add-file`,
-                                    form,
+                                    `${API_URL}/sources/upload`,
+                                    formData,
                                     {
                                         headers: {
                                             'Content-Type':
                                                 'multipart/form-data',
-                                            Authorization: config.ACCESS_TOKEN,
+                                            Authorization: ACCESS_TOKEN,
                                         },
                                     }
                                 )
-                                const sourceId = response.data.data
+                                const { sourceId } = response.data
                                 onUploadHandler({
                                     sourceId: sourceId,
                                     name: propertyName,
@@ -101,7 +106,9 @@ export default function App({ onUploadHandler }) {
                                 }
                                 setUploadedFiles(filterdFiles)
                             }}
-                            maxCount={1}
+                            multiple={true}
+                            maxCount={5}
+                            progress={{ strokeWidth: 2, showInfo: false }}
                         >
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
