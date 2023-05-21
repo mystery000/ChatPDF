@@ -1,6 +1,10 @@
+// export default {
+//     API_URL: process.env.BACKEND_API_URL || 'http://52.90.57.233/apis',
+//     ACCESS_TOKEN:
+//         process.env.ACCESS_TOKEN ||
+//         'jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NWU5ZmM5Nzc1MDk2NTNhYjg4NmY0ZiIsImVtYWlsIjoib2ZydXNvdnljaEBnbWFpbC5jb20iLCJ1c2VybmFtZSI6IlVzZXIiLCJpYXQiOjE2ODQxMTMzMDksImV4cCI6MTY4NDc1MzMwOX0.yfQURXgOOaLGNrFGqP54O3XKvCRmEipmm0q1bhpkhUU',
+// }
 export default {
-    API_URL: process.env.BACKEND_API_URL || 'http://localhost:5000/apis',
-    ACCESS_TOKEN:
-        process.env.ACCESS_TOKEN ||
-        'jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NWFkZmQzNjAyNzFiMTBkZjg1ZjdhNyIsImVtYWlsIjoidGhvc21hczEwMDVAZ21haWwuY29tIiwidXNlcm5hbWUiOiJUaG9tYXMiLCJpYXQiOjE2ODQ1MDIzMjAsImV4cCI6MTY4NTE0MjMyMH0.XT2-Ul_vpnxkQjP1ixL3y7LDo70awGqG9WaSypC0C0g',
+    API_URL: process.env.REACT_APP_API_URL,
+    ACCESS_TOKEN: process.env.REACT_APP_ACCESS_TOKEN,
 }
