@@ -1,40 +1,36 @@
 import axios from 'axios'
-import config from '../config'
+import Config from '../config'
 import React, { useEffect, useState } from 'react'
 import ChatContent from './ChatContent/ChatContent'
 import ChatInputBox from './ChatInputBox/ChatInputBox'
 
-const options = {
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: config.ACCESS_TOKEN,
-    },
-}
-
-const Chat = ({ documentId }) => {
+const Chat = ({ sourceId }) => {
+    const { API_URL, ACCESS_TOKEN } = Config
     const [chatMessages, setChatMessages] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const options = {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: ACCESS_TOKEN,
+        },
+    }
+
     /** Create a new message */
     const sendANewMessage = (message) => {
-        const data = {
-            sourceId: documentId,
-            messages: [
-                {
-                    role: 'user',
-                    content: message,
-                },
-            ],
-        }
         setLoading(true)
+        const data = {
+            question: message,
+        }
         axios
-            .post(`${config.API_URL}/api/chats/message`, data, options)
+            .post(`${API_URL}/sources/${sourceId}/chat`, data, options)
             .then((res) => {
-                const chatPDFMsg = res.data.data.chatPDFMsg
-                chatPDFMsg.typingAnimation = true
+                const { msgLangchain } = res.data
+                msgLangchain.typingAnimation = true
                 setChatMessages((prev) => {
                     const messages = [...prev]
                     messages.pop()
-                    return [...messages, chatPDFMsg]
+                    return [...messages, msgLangchain]
                 })
                 setLoading(false)
             })
@@ -43,36 +39,35 @@ const Chat = ({ documentId }) => {
                 setLoading(false)
             })
 
-        const clientMsg = {
+        const msgUser = {
             sentBy: 'User',
             sentAt: new Date(),
             isChatOwner: true,
             text: message,
         }
-        const loadingMsg = {
+        const msgLoading = {
             isChatOwner: false,
             loading: true,
             sentAt: new Date(),
         }
-        setChatMessages((prev) => [...prev, clientMsg, loadingMsg])
+        setChatMessages((prev) => [...prev, msgUser, msgLoading])
     }
 
     useEffect(() => {
-        // query document to get answery from Grain API, then add answer to state
         axios
-            .get(`${config.API_URL}/api/sources/get/${documentId}/messages`, {
+            .get(`${API_URL}/sources/${sourceId}/messages`, {
                 headers: {
-                    Authorization: config.ACCESS_TOKEN,
+                    Authorization: ACCESS_TOKEN,
                 },
             })
             .then((res) => {
-                setChatMessages(res.data.data)
+                setChatMessages(res.data.messages)
             })
             .catch((error) => {
                 setChatMessages([])
                 console.log(error)
             })
-    }, [documentId])
+    }, [sourceId])
 
     return (
         <div className="max-w-full mx-auto mt-2">

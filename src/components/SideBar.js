@@ -2,20 +2,20 @@ import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
-const App = ({ documents, documentId, onSelectDocumentHandler }) => {
-    const [activeDocument, setActiveDocument] = useState('')
+const App = ({ sources, sourceId, onSelectSourceHandler }) => {
+    const [activeSource, setActiveSource] = useState('')
     useEffect(() => {
-        setActiveDocument(documentId)
-    }, [documentId])
+        setActiveSource(sourceId)
+    }, [sourceId])
 
-    const onUploadHandler = (document) => {
-        const newDocument = {
-            sourceId: document.sourceId,
-            name: document.name,
+    const onUploadHandler = (source) => {
+        const newSource = {
+            name: source.name,
+            sourceId: source.sourceId,
         }
-        documents.push(newDocument)
-        setActiveDocument(newDocument.sourceId)
-        onSelectDocumentHandler(newDocument.sourceId)
+        sources.push(newSource)
+        setActiveSource(newSource.sourceId)
+        onSelectSourceHandler(newSource.sourceId)
     }
 
     return (
@@ -24,9 +24,9 @@ const App = ({ documents, documentId, onSelectDocumentHandler }) => {
                 <FileUploadModal onUploadHandler={onUploadHandler} />
             </div>
             <ChatContainer
-                documents={documents}
-                documentId={activeDocument}
-                onSelectDocumentHandler={onSelectDocumentHandler}
+                sources={sources}
+                sourceId={activeSource}
+                onSelectSourceHandler={onSelectSourceHandler}
             />
         </>
     )

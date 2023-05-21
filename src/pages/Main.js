@@ -1,61 +1,61 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Chat from '../ChatApp'
-import config from '../config'
+import Config from '../config'
 import { message } from 'antd'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
 
 const Main = () => {
-    const [documentId, setDocumentId] = useState('')
+    const [sourceId, setSourceId] = useState('')
     const [deleted, setDeleted] = useState(0)
-    const [documents, setDocuments] = useState([])
+    const [sources, setSources] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
+    const { API_URL, ACCESS_TOKEN } = Config
 
     useEffect(() => {
         axios
-            .get(`${config.API_URL}/api/sources/get`, {
+            .get(`${API_URL}/sources`, {
                 headers: {
-                    Authorization: config.ACCESS_TOKEN,
+                    Authorization: ACCESS_TOKEN,
                 },
             })
             .then((res) => {
-                const documents = res.data.data
-                setDocuments(documents)
-                if (documents.length) setDocumentId(documents[0].sourceId)
+                const sources = res.data.sources
+                setSources(sources)
+                if (sources.length) setSourceId(sources[0].sourceId)
             })
             .catch((error) => {
-                setDocuments([])
+                setSources([])
                 console.log(
                     'Failed to call Grain API to get list of collections.'
                 )
             })
     }, [deleted])
 
-    const onSelectDocumentHandler = (documentId) => {
-        setDocumentId(documentId)
+    const onSelectSourceHandler = (sourceId) => {
+        setSourceId(sourceId)
     }
     const onRenameHandler = async (name) => {
-        const data = { sourceId: documentId, name }
-
+        const payload = { name: name }
         try {
             const response = await axios.put(
-                `${config.API_URL}/api/sources/update`,
-                data,
+                `${API_URL}/sources/${sourceId}`,
+                payload,
                 {
                     headers: {
-                        Authorization: config.ACCESS_TOKEN,
+                        Authorization: ACCESS_TOKEN,
                     },
                 }
             )
-            const newDocuments = documents.map((document) => {
-                if (document.sourceId === documentId) {
-                    document.name = name
+            const newSources = sources.map((source) => {
+                if (source.sourceId === sourceId) {
+                    source.name = name
                 }
-                return document
+                return source
             })
-            setDocuments(newDocuments)
+            setSources(newSources)
         } catch (e) {
             console.log(e)
         }
@@ -63,10 +63,10 @@ const Main = () => {
     const onDeleteHandler = async () => {
         try {
             const response = await axios.delete(
-                `${config.API_URL}/api/sources/${documentId}`,
+                `${API_URL}/sources/${sourceId}`,
                 {
                     headers: {
-                        Authorization: config.ACCESS_TOKEN,
+                        Authorization: ACCESS_TOKEN,
                     },
                 }
             )
@@ -81,18 +81,18 @@ const Main = () => {
             <div className="flex">
                 <div className="flex-none h-screen pb-4 w-0 sm:w-64 bg-[#001529] text-[rgba(255,255,255,0.65)] overflow-y-auto">
                     <SideBar
-                        documents={documents}
-                        documentId={documentId}
-                        onSelectDocumentHandler={onSelectDocumentHandler}
+                        sources={sources}
+                        sourceId={sourceId}
+                        onSelectSourceHandler={onSelectSourceHandler}
                     />
                 </div>
-                {documentId ? (
+                {sourceId ? (
                     <div className="w-full">
                         <Header
                             onRenameHandler={onRenameHandler}
                             onDeleteHandler={onDeleteHandler}
                         />
-                        <Chat documentId={documentId} />
+                        <Chat sourceId={sourceId} />
                         {contextHolder}
                     </div>
                 ) : (

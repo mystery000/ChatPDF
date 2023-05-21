@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { AiOutlineMessage } from 'react-icons/ai'
 
-const App = ({ document, active, onChangeHandler }) => {
+const App = ({ source, active, onChangeHandler }) => {
     const [isActive, setIsActive] = useState(false)
 
     const handleClick = () => {
         setIsActive(true)
-        onChangeHandler(document.sourceId)
+        onChangeHandler(source.sourceId)
     }
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const App = ({ document, active, onChangeHandler }) => {
                 <AiOutlineMessage />
                 <div className="text-left">
                     <h1 className="w-40 ml-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                        {document.name}
+                        {source.name}
                     </h1>
                 </div>
             </div>
