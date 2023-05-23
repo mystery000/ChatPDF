@@ -120,7 +120,7 @@ export default function App({ sourceId, handleUploadDocument }) {
                     strokeColor="#1677ff"
                     format={(percent) => percent + '%'}
                     status="active"
-                    // className={uploadProgress ? 'block' : 'hidden'}
+                    className={uploadProgress ? 'block' : 'hidden'}
                 />
             </Modal>
         </>
