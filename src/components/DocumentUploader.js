@@ -1,11 +1,11 @@
 import axios from 'axios'
 import Config from '../config'
 import FormData from 'form-data'
-import React, { useEffect, useState } from 'react'
-import { Form, Input, Modal, Upload, message } from 'antd'
+import React, { useState } from 'react'
+import { Form, Modal, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
-export default function App({ onUploadHandler }) {
+export default function App({ sourceId, onUploadHandler }) {
     const { API_URL, ACCESS_TOKEN } = Config
     const [showModal, setShowModal] = useState(false)
     const [form] = Form.useForm()
@@ -16,29 +16,29 @@ export default function App({ onUploadHandler }) {
     return (
         <>
             <button
-                className="bg-white/20 text-white border border-dashed hover:border-indigo-500 font-bold uppercase text-sm px-12 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2 ease-linear transition-all duration-150"
+                className="bg-white/20 border border-dashed hover:border-indigo-500 uppercase text-xs px-12 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => setShowModal(true)}
             >
-                + Add Property
+                + Add Documents
             </button>
 
             <Modal
                 open={showModal}
-                title="Add a property"
+                title="Add Documents"
                 okText="Upload"
                 cancelText="Cancel"
                 onCancel={() => setShowModal(false)}
                 onOk={() => {
                     form.validateFields()
                         .then(async (values) => {
-                            const propertyName = values.propertyName
                             const fileList = values.dragger.fileList
                             try {
                                 setLoading(true)
                                 // Create from to upload files into server
                                 const formData = new FormData()
-                                formData.append('sourceName', propertyName)
+                                console.log(sourceId)
+                                formData.append('sourceId', sourceId)
                                 fileList.forEach(({ originFileObj }) => {
                                     formData.append('files', originFileObj)
                                 })
@@ -53,11 +53,8 @@ export default function App({ onUploadHandler }) {
                                         },
                                     }
                                 )
-                                const { sourceId } = response.data
-                                onUploadHandler({
-                                    sourceId: sourceId,
-                                    name: propertyName,
-                                })
+                                const { documents } = response.data
+                                onUploadHandler(documents)
                                 setLoading(false)
                             } catch (err) {
                                 console.log(err)
@@ -76,19 +73,7 @@ export default function App({ onUploadHandler }) {
                 okButtonProps={{ className: 'bg-blue-600', loading: loading }}
             >
                 <Form form={form} layout="vertical">
-                    <Form.Item
-                        name="propertyName"
-                        label="Property Name"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input the name of property',
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="dragger" label="dragger" noStyle>
+                    <Form.Item name="dragger" className="mt-6">
                         <Upload.Dragger
                             name="files"
                             beforeUpload={() => false}
