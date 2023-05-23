@@ -4,19 +4,19 @@ import { FaRegUserCircle } from 'react-icons/fa'
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { Input, Modal, Popconfirm } from 'antd'
 
-const Header = ({ onRenameHandler, onDeleteHandler }) => {
+const Header = ({ handleRename, handleDelete }) => {
     const [renameModalOpen, setRenameModalOpen] = useState(false)
     const [chatName, setChatName] = useState('')
 
     const handleChange = (e) => {
         setChatName(e.target.value)
     }
-    const onOkRenameHandler = () => {
-        onRenameHandler(chatName)
+    const handleOK = () => {
+        handleRename(chatName)
         setChatName('')
         setRenameModalOpen(false)
     }
-    const onCancelRenameHandler = () => {
+    const handleCancel = () => {
         setChatName('')
         setRenameModalOpen(false)
     }
@@ -44,7 +44,7 @@ const Header = ({ onRenameHandler, onDeleteHandler }) => {
                             description={
                                 'Are you sure you want to delete this chat?'
                             }
-                            onConfirm={onDeleteHandler}
+                            onConfirm={handleDelete}
                             okText="Yes"
                             okButtonProps={{
                                 className:
@@ -73,8 +73,8 @@ const Header = ({ onRenameHandler, onDeleteHandler }) => {
                                 top: '10%',
                             }}
                             open={renameModalOpen}
-                            onOk={onOkRenameHandler}
-                            onCancel={onCancelRenameHandler}
+                            onOk={handleOK}
+                            onCancel={handleCancel}
                             okButtonProps={{
                                 className: 'bg-blue-600',
                             }}

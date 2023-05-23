@@ -2,31 +2,31 @@ import { useEffect, useState } from 'react'
 import ChatContainer from '../components/ChatContainer'
 import FileUploadModal from '../components/FileUploadModal'
 
-const App = ({ sources, sourceId, onSelectSourceHandler }) => {
+const App = ({ sources, sourceId, handleSelectSource }) => {
     const [activeSource, setActiveSource] = useState('')
     useEffect(() => {
         setActiveSource(sourceId)
     }, [sourceId])
 
-    const onUploadHandler = (source) => {
+    const handleUploadSource = (source) => {
         const newSource = {
             name: source.name,
             sourceId: source.sourceId,
         }
         sources.push(newSource)
         setActiveSource(newSource.sourceId)
-        onSelectSourceHandler(newSource.sourceId)
+        handleSelectSource(newSource.sourceId)
     }
 
     return (
         <>
             <div className="text-center">
-                <FileUploadModal onUploadHandler={onUploadHandler} />
+                <FileUploadModal handleUploadSource={handleUploadSource} />
             </div>
             <ChatContainer
                 sources={sources}
                 sourceId={activeSource}
-                onSelectSourceHandler={onSelectSourceHandler}
+                handleSelectSource={handleSelectSource}
             />
         </>
     )

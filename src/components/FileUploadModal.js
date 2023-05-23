@@ -1,11 +1,11 @@
 import axios from 'axios'
 import Config from '../config'
 import FormData from 'form-data'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Form, Input, Modal, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
-export default function App({ onUploadHandler }) {
+export default function App({ handleUploadSource }) {
     const { API_URL, ACCESS_TOKEN } = Config
     const [showModal, setShowModal] = useState(false)
     const [form] = Form.useForm()
@@ -54,7 +54,7 @@ export default function App({ onUploadHandler }) {
                                     }
                                 )
                                 const { sourceId } = response.data
-                                onUploadHandler({
+                                handleUploadSource({
                                     sourceId: sourceId,
                                     name: propertyName,
                                 })

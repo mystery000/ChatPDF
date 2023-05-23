@@ -2,16 +2,17 @@ import axios from 'axios'
 import Config from '../config'
 import FormData from 'form-data'
 import React, { useState } from 'react'
-import { Form, Modal, Upload, message } from 'antd'
+import { Form, Modal, Progress, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
-export default function App({ sourceId, onUploadHandler }) {
+export default function App({ sourceId, handleUploadDocument }) {
     const { API_URL, ACCESS_TOKEN } = Config
     const [showModal, setShowModal] = useState(false)
     const [form] = Form.useForm()
     const [uploadedFiles, setUploadedFiles] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const [loading, setLoading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState(0)
 
     return (
         <>
@@ -37,7 +38,6 @@ export default function App({ sourceId, onUploadHandler }) {
                                 setLoading(true)
                                 // Create from to upload files into server
                                 const formData = new FormData()
-                                console.log(sourceId)
                                 formData.append('sourceId', sourceId)
                                 fileList.forEach(({ originFileObj }) => {
                                     formData.append('files', originFileObj)
@@ -51,11 +51,20 @@ export default function App({ sourceId, onUploadHandler }) {
                                                 'multipart/form-data',
                                             Authorization: ACCESS_TOKEN,
                                         },
+                                        onUploadProgress: (data) => {
+                                            setUploadProgress(
+                                                Math.round(
+                                                    (100 * data.loaded) /
+                                                        data.total
+                                                )
+                                            )
+                                        },
                                     }
                                 )
                                 const { documents } = response.data
-                                onUploadHandler(documents)
+                                handleUploadDocument(documents)
                                 setLoading(false)
+                                setUploadProgress(0)
                             } catch (err) {
                                 console.log(err)
                                 setLoading(false)
@@ -105,6 +114,14 @@ export default function App({ sourceId, onUploadHandler }) {
                     </Form.Item>
                 </Form>
                 {contextHolder}
+
+                <Progress
+                    percent={uploadProgress}
+                    strokeColor="#1677ff"
+                    format={(percent) => percent + '%'}
+                    status="active"
+                    // className={uploadProgress ? 'block' : 'hidden'}
+                />
             </Modal>
         </>
     )

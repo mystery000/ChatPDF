@@ -1,11 +1,11 @@
 import Chat from './Chat'
 import React, { useEffect, useState } from 'react'
 
-const App = ({ sources, sourceId, onSelectSourceHandler }) => {
+const App = ({ sources, sourceId, handleSelectSource }) => {
     const [activeSourceId, setActiveSourceId] = useState('')
 
-    const onChangeHandler = (activeId) => {
-        onSelectSourceHandler(activeId)
+    const handleChange = (activeId) => {
+        handleSelectSource(activeId)
         setActiveSourceId(activeId)
     }
 
@@ -15,12 +15,12 @@ const App = ({ sources, sourceId, onSelectSourceHandler }) => {
 
     return (
         <>
-            {sources.map((source, index) => (
+            {sources.map((source) => (
                 <Chat
-                    key={index}
+                    key={source.sourceId}
                     active={activeSourceId === source.sourceId}
                     source={source}
-                    onChangeHandler={onChangeHandler}
+                    handleChange={handleChange}
                 ></Chat>
             ))}
         </>

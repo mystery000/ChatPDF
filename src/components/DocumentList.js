@@ -19,7 +19,7 @@ const DocumentList = ({ sourceId }) => {
             .catch(console.log)
     }, [sourceId])
 
-    const onUploadHandler = (documents) => {
+    const handleUploadDocument = (documents) => {
         setDocuments((prev) => [...prev, ...documents])
     }
 
@@ -41,7 +41,7 @@ const DocumentList = ({ sourceId }) => {
                 ))}
                 <DocumentUploader
                     sourceId={sourceId}
-                    onUploadHandler={onUploadHandler}
+                    handleUploadDocument={handleUploadDocument}
                 />
             </div>
         </div>

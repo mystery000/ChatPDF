@@ -2,12 +2,12 @@ import DocumentList from './DocumentList'
 import { useEffect, useState } from 'react'
 import { AiOutlineMessage } from 'react-icons/ai'
 
-const App = ({ source, active, onChangeHandler }) => {
+const App = ({ source, active, handleChange }) => {
     const [isActive, setIsActive] = useState(false)
 
     const handleClick = () => {
         setIsActive(true)
-        onChangeHandler(source.sourceId)
+        handleChange(source.sourceId)
     }
 
     useEffect(() => {

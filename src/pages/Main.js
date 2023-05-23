@@ -34,10 +34,10 @@ const Main = () => {
             })
     }, [deleted])
 
-    const onSelectSourceHandler = (sourceId) => {
+    const handleSelectSource = (sourceId) => {
         setSourceId(sourceId)
     }
-    const onRenameHandler = async (name) => {
+    const handleRename = async (name) => {
         const payload = { name: name }
         try {
             const response = await axios.put(
@@ -60,7 +60,7 @@ const Main = () => {
             console.log(e)
         }
     }
-    const onDeleteHandler = async () => {
+    const handleDelete = async () => {
         try {
             const response = await axios.delete(
                 `${API_URL}/sources/${sourceId}`,
@@ -83,14 +83,14 @@ const Main = () => {
                     <SideBar
                         sources={sources}
                         sourceId={sourceId}
-                        onSelectSourceHandler={onSelectSourceHandler}
+                        handleSelectSource={handleSelectSource}
                     />
                 </div>
                 {sourceId ? (
                     <div className="w-full">
                         <Header
-                            onRenameHandler={onRenameHandler}
-                            onDeleteHandler={onDeleteHandler}
+                            handleRename={handleRename}
+                            handleDelete={handleDelete}
                         />
                         <Chat sourceId={sourceId} />
                         {contextHolder}
