@@ -9,8 +9,8 @@ import MainLayout from '../layout/MainLayout'
 
 const Main = () => {
     const [sourceId, setSourceId] = useState('')
-    const [deleted, setDeleted] = useState(0)
-    const [isUpdate, setIsUpdate] = useState(false)
+    const [isDeleted, setDeleted] = useState(0)
+    const [isUpdate, setUpdate] = useState(false)
     const [sources, setSources] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const { API_URL, ACCESS_TOKEN } = Config
@@ -33,7 +33,7 @@ const Main = () => {
                     'Failed to call Grain API to get list of collections.'
                 )
             })
-    }, [deleted])
+    }, [isDeleted])
 
     const handleSelectSource = (sourceId) => {
         setSourceId(sourceId)
@@ -69,24 +69,22 @@ const Main = () => {
                 },
             })
             messageApi.success('Chat was deleted')
-            setDeleted(deleted + 1)
+            setDeleted((prev) => !prev)
         } catch (e) {
             console.log(e)
         }
     }
-
     const handleReset = async () => {
         try {
             await axios.delete(`${API_URL}/sources/${sourceId}/messages`, {
                 headers: { Authorization: ACCESS_TOKEN },
             })
             messageApi.success('Chat cleared')
-            setIsUpdate((prev) => !prev)
+            setUpdate((prev) => !prev)
         } catch (err) {
             console.log(err)
         }
     }
-
     return (
         <MainLayout>
             <div className="flex">
