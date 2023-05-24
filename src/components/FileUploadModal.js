@@ -2,7 +2,7 @@ import axios from 'axios'
 import Config from '../config'
 import FormData from 'form-data'
 import React, { useState } from 'react'
-import { Form, Input, Modal, Upload, message } from 'antd'
+import { Form, Input, Modal, Progress, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
 export default function App({ handleUploadSource }) {
@@ -12,6 +12,7 @@ export default function App({ handleUploadSource }) {
     const [uploadedFiles, setUploadedFiles] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const [loading, setLoading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState(0)
 
     return (
         <div className="text-center">
@@ -51,6 +52,14 @@ export default function App({ handleUploadSource }) {
                                                 'multipart/form-data',
                                             Authorization: ACCESS_TOKEN,
                                         },
+                                        onUploadProgress: (data) => {
+                                            setUploadProgress(
+                                                Math.round(
+                                                    (100 * data.loaded) /
+                                                        data.total
+                                                )
+                                            )
+                                        },
                                     }
                                 )
                                 const { sourceId } = response.data
@@ -59,6 +68,7 @@ export default function App({ handleUploadSource }) {
                                     name: propertyName,
                                 })
                                 setLoading(false)
+                                setUploadProgress(0)
                             } catch (err) {
                                 console.log(err)
                                 setLoading(false)
@@ -119,6 +129,13 @@ export default function App({ handleUploadSource }) {
                         </Upload.Dragger>
                     </Form.Item>
                 </Form>
+                <Progress
+                    percent={uploadProgress}
+                    strokeColor="#1677ff"
+                    format={(percent) => percent + '%'}
+                    status="active"
+                    className={uploadProgress ? 'block' : 'hidden'}
+                />
                 {contextHolder}
             </Modal>
         </div>
