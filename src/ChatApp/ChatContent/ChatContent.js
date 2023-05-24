@@ -1,15 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 import TypingAnimationText from './TypingAnimationText'
 import PulseLoader from 'react-spinners/PulseLoader'
-import { Drawer } from 'antd'
+import { Card, Drawer } from 'antd'
 
 const ChatContent = ({ messages }) => {
     const chatPanelElement = useRef()
     const [isOpen, setOpen] = useState(false)
+    const [sourceDocuments, setSourceDocuments] = useState([])
+
     const handleClick = (message) => {
         setOpen(!message.isChatOwner)
-        console.log(message)
+        setSourceDocuments(message.sourceDocuments)
     }
+
+    const handleClose = () => {
+        setOpen(false)
+        setSourceDocuments([])
+    }
+
     return (
         <div
             className="flex-1 w-full overflow-auto flex justify-center"
@@ -79,15 +87,20 @@ const ChatContent = ({ messages }) => {
                 ))}
             </div>
             <Drawer
-                title="Drawer with extra actions"
+                title="Sources"
                 placement={'right'}
                 width={500}
-                onClose={() => setOpen(false)}
+                onClose={handleClose}
                 open={isOpen}
             >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                {sourceDocuments.map((sourceDocument, index) => (
+                    <Card
+                        title={`Document${index + 1}`}
+                        className="w-full mb-10"
+                    >
+                        <p>{sourceDocument.pageContent}</p>
+                    </Card>
+                ))}
             </Drawer>
         </div>
     )
