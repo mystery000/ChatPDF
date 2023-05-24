@@ -56,6 +56,7 @@ const Chat = ({ sourceId, isUpdate }) => {
     }
 
     useEffect(() => {
+        setLoading(true)
         axios
             .get(`${API_URL}/sources/${sourceId}/messages`, {
                 headers: {
@@ -64,8 +65,10 @@ const Chat = ({ sourceId, isUpdate }) => {
             })
             .then((res) => {
                 setChatMessages(res.data.messages)
+                setLoading(false)
             })
             .catch((error) => {
+                setLoading(false)
                 setChatMessages([])
                 console.log(error)
             })

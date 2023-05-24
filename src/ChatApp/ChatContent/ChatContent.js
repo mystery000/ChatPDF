@@ -1,9 +1,15 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import TypingAnimationText from './TypingAnimationText'
 import PulseLoader from 'react-spinners/PulseLoader'
+import { Drawer } from 'antd'
+
 const ChatContent = ({ messages }) => {
     const chatPanelElement = useRef()
-
+    const [isOpen, setOpen] = useState(false)
+    const handleClick = (message) => {
+        setOpen(!message.isChatOwner)
+        console.log(message)
+    }
     return (
         <div
             className="flex-1 w-full overflow-auto flex justify-center"
@@ -18,6 +24,7 @@ const ChatContent = ({ messages }) => {
                                 ? 'justify-end'
                                 : 'justify-start'
                         }`}
+                        onClick={() => handleClick(message)}
                     >
                         <div
                             className={`${
@@ -71,6 +78,17 @@ const ChatContent = ({ messages }) => {
                     </div>
                 ))}
             </div>
+            <Drawer
+                title="Drawer with extra actions"
+                placement={'right'}
+                width={500}
+                onClose={() => setOpen(false)}
+                open={isOpen}
+            >
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Drawer>
         </div>
     )
 }
