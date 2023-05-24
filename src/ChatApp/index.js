@@ -3,11 +3,13 @@ import Config from '../config'
 import React, { useEffect, useState } from 'react'
 import ChatContent from './ChatContent/ChatContent'
 import ChatInputBox from './ChatInputBox/ChatInputBox'
+import { Empty, Spin } from 'antd'
 
 const Chat = ({ sourceId, isUpdate }) => {
     const { API_URL, ACCESS_TOKEN } = Config
     const [chatMessages, setChatMessages] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [processing, setProcessing] = useState(false)
+    const [isLoading, setLoading] = useState(false)
 
     const options = {
         headers: {
@@ -18,7 +20,7 @@ const Chat = ({ sourceId, isUpdate }) => {
 
     /** Create a new message */
     const sendANewMessage = (message) => {
-        setLoading(true)
+        setProcessing(true)
         const data = {
             question: message,
         }
@@ -32,11 +34,11 @@ const Chat = ({ sourceId, isUpdate }) => {
                     messages.pop()
                     return [...messages, msgLangchain]
                 })
-                setLoading(false)
+                setProcessing(false)
             })
             .catch((err) => {
                 console.log(err)
-                setLoading(false)
+                setProcessing(false)
             })
 
         const msgUser = {
@@ -72,10 +74,21 @@ const Chat = ({ sourceId, isUpdate }) => {
     return (
         <div className="max-w-full mx-auto mt-2">
             <div className="bg-white flex flex-col max-h-[calc(100vh_-_70px)] h-[calc(100vh_-_70px)]">
-                <ChatContent messages={chatMessages} />
+                {isLoading ? (
+                    <div className="flex-1 w-full flex flex-col items-center">
+                        <Spin tip="Loading"></Spin>
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
+                ) : chatMessages.length ? (
+                    <ChatContent messages={chatMessages} />
+                ) : (
+                    <div className="flex-1 w-full flex flex-col items-center">
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
+                )}
                 <ChatInputBox
                     sendANewMessage={sendANewMessage}
-                    loading={loading}
+                    processing={processing}
                 />
             </div>
         </div>

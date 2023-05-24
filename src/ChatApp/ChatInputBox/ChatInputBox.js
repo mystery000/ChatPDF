@@ -7,7 +7,7 @@ const { TextArea } = Input
 
 // import DebouncedInput from './DebouncedInput'
 
-const ChatInputBox = ({ sendANewMessage, loading }) => {
+const ChatInputBox = ({ sendANewMessage, processing }) => {
     const [newMessage, setNewMessage] = useState('')
 
     /**
@@ -29,7 +29,7 @@ const ChatInputBox = ({ sendANewMessage, loading }) => {
     const onKeyDownHandler = (e) => {
         if (!e.shiftKey) {
             e.preventDefault()
-            if (loading) return
+            if (processing) return
             doSendMessage()
         }
     }

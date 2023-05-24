@@ -4,11 +4,6 @@ import PulseLoader from 'react-spinners/PulseLoader'
 const ChatContent = ({ messages }) => {
     const chatPanelElement = useRef()
 
-    useEffect(() => {
-        const scrollingElement = chatPanelElement.current
-        scrollingElement.scrollTop = scrollingElement.scrollHeight
-    }, [messages])
-
     return (
         <div
             className="flex-1 w-full overflow-auto flex justify-center"
