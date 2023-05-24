@@ -14,7 +14,7 @@ export default function App({ handleUploadSource }) {
     const [loading, setLoading] = useState(false)
 
     return (
-        <>
+        <div className="text-center">
             <button
                 className="bg-white/20 text-white border border-dashed hover:border-indigo-500 font-bold uppercase text-sm px-12 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2 ease-linear transition-all duration-150"
                 type="button"
@@ -121,6 +121,6 @@ export default function App({ handleUploadSource }) {
                 </Form>
                 {contextHolder}
             </Modal>
-        </>
+        </div>
     )
 }

@@ -20,9 +20,7 @@ const App = ({ sources, sourceId, handleSelectSource }) => {
 
     return (
         <>
-            <div className="text-center">
-                <FileUploadModal handleUploadSource={handleUploadSource} />
-            </div>
+            <FileUploadModal handleUploadSource={handleUploadSource} />
             <ChatContainer
                 sources={sources}
                 sourceId={activeSource}
