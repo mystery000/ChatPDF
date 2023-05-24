@@ -10,6 +10,7 @@ import MainLayout from '../layout/MainLayout'
 const Main = () => {
     const [sourceId, setSourceId] = useState('')
     const [deleted, setDeleted] = useState(0)
+    const [isUpdate, setIsUpdate] = useState(false)
     const [sources, setSources] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const { API_URL, ACCESS_TOKEN } = Config
@@ -62,20 +63,30 @@ const Main = () => {
     }
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(
-                `${API_URL}/sources/${sourceId}`,
-                {
-                    headers: {
-                        Authorization: ACCESS_TOKEN,
-                    },
-                }
-            )
+            await axios.delete(`${API_URL}/sources/${sourceId}`, {
+                headers: {
+                    Authorization: ACCESS_TOKEN,
+                },
+            })
             messageApi.success('Chat was deleted')
             setDeleted(deleted + 1)
         } catch (e) {
             console.log(e)
         }
     }
+
+    const handleReset = async () => {
+        try {
+            await axios.delete(`${API_URL}/sources/${sourceId}/messages`, {
+                headers: { Authorization: ACCESS_TOKEN },
+            })
+            messageApi.success('Chat cleared')
+            setIsUpdate((prev) => !prev)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <MainLayout>
             <div className="flex">
@@ -91,8 +102,9 @@ const Main = () => {
                         <Header
                             handleRename={handleRename}
                             handleDelete={handleDelete}
+                            handleReset={handleReset}
                         />
-                        <Chat sourceId={sourceId} />
+                        <Chat sourceId={sourceId} isUpdate={isUpdate} />
                         {contextHolder}
                     </div>
                 ) : (

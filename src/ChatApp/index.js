@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import ChatContent from './ChatContent/ChatContent'
 import ChatInputBox from './ChatInputBox/ChatInputBox'
 
-const Chat = ({ sourceId }) => {
+const Chat = ({ sourceId, isUpdate }) => {
     const { API_URL, ACCESS_TOKEN } = Config
     const [chatMessages, setChatMessages] = useState([])
     const [loading, setLoading] = useState(false)
@@ -67,7 +67,7 @@ const Chat = ({ sourceId }) => {
                 setChatMessages([])
                 console.log(error)
             })
-    }, [sourceId])
+    }, [sourceId, isUpdate])
 
     return (
         <div className="max-w-full mx-auto mt-2">

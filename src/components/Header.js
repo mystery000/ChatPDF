@@ -1,25 +1,28 @@
 import { useState } from 'react'
 import { TbDotsVertical } from 'react-icons/tb'
 import { FaRegUserCircle } from 'react-icons/fa'
-import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineClear } from 'react-icons/ai'
 import { Input, Modal, Popconfirm } from 'antd'
 
-const Header = ({ handleRename, handleDelete }) => {
+const Header = ({ handleRename, handleDelete, handleReset }) => {
     const [renameModalOpen, setRenameModalOpen] = useState(false)
     const [chatName, setChatName] = useState('')
 
     const handleChange = (e) => {
         setChatName(e.target.value)
     }
+
     const handleOK = () => {
         handleRename(chatName)
         setChatName('')
         setRenameModalOpen(false)
     }
+
     const handleCancel = () => {
         setChatName('')
         setRenameModalOpen(false)
     }
+
     return (
         <>
             <nav className="flex items-center justify-between flex-wrap bg-white p-3">
@@ -86,6 +89,14 @@ const Header = ({ handleRename, handleDelete }) => {
                                 value={chatName}
                             />
                         </Modal>
+
+                        <span
+                            title="Reset chat"
+                            className="cursor-pointer inline-block px-1"
+                            onClick={handleReset}
+                        >
+                            <AiOutlineClear size={20} />
+                        </span>
                     </div>
                     <div>
                         <button className="flex items-center bg-slate-800 text-white active:bg-slate-900 font-bold text-sm px-5 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
