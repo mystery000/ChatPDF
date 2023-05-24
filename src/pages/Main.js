@@ -104,7 +104,11 @@ const Main = () => {
                             handleDelete={handleDelete}
                             handleReset={handleReset}
                         />
-                        <Chat sourceId={sourceId} isUpdate={isUpdate} />
+                        <Chat
+                            key={sourceId}
+                            sourceId={sourceId}
+                            isUpdate={isUpdate}
+                        />
                         {contextHolder}
                     </div>
                 ) : (
