@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Chat from '../ChatApp'
 import Config from '../config'
-import { message } from 'antd'
+import { Empty, Spin, message } from 'antd'
 import Header from '../components/Header'
 import SideBar from '../components/SideBar'
 import MainLayout from '../layout/MainLayout'
@@ -14,8 +14,10 @@ const Main = () => {
     const [sources, setSources] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const { API_URL, ACCESS_TOKEN } = Config
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        setLoading(true)
         axios
             .get(`${API_URL}/sources`, {
                 headers: {
@@ -26,6 +28,7 @@ const Main = () => {
                 const sources = res.data.sources
                 setSources(sources)
                 if (sources.length) setSourceId(sources[0].sourceId)
+                setLoading(false)
             })
             .catch((error) => {
                 setSources([])
@@ -41,15 +44,11 @@ const Main = () => {
     const handleRename = async (name) => {
         const payload = { name: name }
         try {
-            const response = await axios.put(
-                `${API_URL}/sources/${sourceId}`,
-                payload,
-                {
-                    headers: {
-                        Authorization: ACCESS_TOKEN,
-                    },
-                }
-            )
+            await axios.put(`${API_URL}/sources/${sourceId}`, payload, {
+                headers: {
+                    Authorization: ACCESS_TOKEN,
+                },
+            })
             const newSources = sources.map((source) => {
                 if (source.sourceId === sourceId) {
                     source.name = name
@@ -85,6 +84,9 @@ const Main = () => {
             console.log(err)
         }
     }
+    if (loading) {
+        return <Spin tip="Loading..." size="large"></Spin>
+    }
     return (
         <MainLayout>
             <div className="flex">
@@ -107,7 +109,7 @@ const Main = () => {
                     </div>
                 ) : (
                     <div className="text-center w-full text-2xl">
-                        Please select a property to chat with PDF
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </div>
                 )}
             </div>

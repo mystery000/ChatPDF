@@ -95,6 +95,7 @@ const ChatContent = ({ messages }) => {
             >
                 {sourceDocuments.map((sourceDocument, index) => (
                     <Card
+                        key={index}
                         title={`Document${index + 1}`}
                         className="w-full mb-10"
                     >
