@@ -3,6 +3,7 @@ import axios from 'axios'
 import Config from '../config'
 import { FaRegFilePdf } from 'react-icons/fa'
 import DocumentUploader from './DocumentUploader'
+import { Progress } from 'antd'
 
 const DocumentList = ({ sourceId }) => {
     const [documents, setDocuments] = useState([])
@@ -39,6 +40,7 @@ const DocumentList = ({ sourceId }) => {
                         </div>
                     </div>
                 ))}
+                <Progress percent={100} size="small" className="w-5/6 m-0" />
                 <DocumentUploader
                     sourceId={sourceId}
                     handleUploadDocument={handleUploadDocument}
