@@ -28,10 +28,12 @@ const Main = () => {
                 const sources = res.data.sources
                 setSources(sources)
                 if (sources.length) setSourceId(sources[0].sourceId)
+                else setSourceId('')
                 setLoading(false)
             })
             .catch((error) => {
                 setSources([])
+                setSourceId('')
                 console.log(
                     'Failed to call Grain API to get list of collections.'
                 )
