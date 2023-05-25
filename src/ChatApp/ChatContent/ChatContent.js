@@ -4,7 +4,7 @@ import PulseLoader from 'react-spinners/PulseLoader'
 import { Card, Drawer } from 'antd'
 
 const ChatContent = ({ messages }) => {
-    const chatPanelElement = useRef()
+    const lastMessageRef = useRef(null)
     const [isOpen, setOpen] = useState(false)
     const [sourceDocuments, setSourceDocuments] = useState([])
 
@@ -18,12 +18,14 @@ const ChatContent = ({ messages }) => {
         setSourceDocuments([])
     }
 
+    useEffect(() => {
+        // 👇️ scroll to bottom every time messages change
+        lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [messages])
+
     return (
-        <div
-            className="flex-1 w-full overflow-auto flex justify-center"
-            ref={chatPanelElement}
-        >
-            <div className="w-full max-w-3xl ">
+        <div className="flex-1 w-full overflow-auto flex justify-center">
+            <div className="w-full max-w-3xl">
                 {messages.map((message, index) => (
                     <div
                         key={index}
@@ -61,7 +63,7 @@ const ChatContent = ({ messages }) => {
                                     { hour: '2-digit', minute: '2-digit' }
                                 )} */}
                             </span>
-                            <p
+                            <div
                                 className={`text-sm ${
                                     message.isChatOwner
                                         ? 'text-white'
@@ -78,13 +80,13 @@ const ChatContent = ({ messages }) => {
                                                 ? true
                                                 : false
                                         }
-                                        chatPanelElement={chatPanelElement}
                                     />
                                 )}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 ))}
+                <div ref={lastMessageRef}></div>
             </div>
             <Drawer
                 title="Sources"
