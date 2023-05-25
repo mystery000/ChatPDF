@@ -40,7 +40,7 @@ const DocumentList = ({ sourceId }) => {
                         </div>
                     </div>
                 ))}
-                <Progress percent={100} size="small" className="w-5/6 m-0" />
+                {/* <Progress percent={100} size="small" className="w-5/6 m-0" /> */}
                 <DocumentUploader
                     sourceId={sourceId}
                     handleUploadDocument={handleUploadDocument}
