@@ -33,7 +33,7 @@ const Header = ({ handleRename, handleDelete, handleReset }) => {
                     </button>
                 </div>
                 <div className="w-full hidden flex-grow lg:block lg:flex lg:items-center lg:w-auto">
-                    <div className="text-sm lg:flex-grow">
+                    <div className="text-sm lg:flex-grow text-[#888]">
                         {/* <a
                             href="#responsive-header"
                             className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
@@ -58,14 +58,14 @@ const Header = ({ handleRename, handleDelete, handleReset }) => {
                         >
                             <span
                                 title="Delete Chat"
-                                className="cursor-pointer inline-block px-1"
+                                className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
                             >
                                 <AiOutlineDelete size={20} />
                             </span>
                         </Popconfirm>
                         <span
                             title="Rename Chat"
-                            className="cursor-pointer inline-block px-1"
+                            className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
                             onClick={() => setRenameModalOpen(true)}
                         >
                             <AiOutlineEdit size={20} />
@@ -92,7 +92,7 @@ const Header = ({ handleRename, handleDelete, handleReset }) => {
 
                         <span
                             title="Reset chat"
-                            className="cursor-pointer inline-block px-1"
+                            className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
                             onClick={handleReset}
                         >
                             <AiOutlineClear size={20} />

@@ -86,9 +86,6 @@ const Main = () => {
             console.log(err)
         }
     }
-    if (loading) {
-        return <Spin tip="Loading..." size="large"></Spin>
-    }
     return (
         <MainLayout>
             <div className="flex">

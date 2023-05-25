@@ -18,7 +18,7 @@ const App = ({ source, active, handleChange }) => {
         <>
             <div
                 onClick={handleClick}
-                className={`flex items-center text-center px-3 py-2 m-1 w-[96%] transition-colors duration-600 hover:text-white focus:outline-none text-base cursor-pointer ${
+                className={`flex items-center text-center px-3 py-2 m-1 w-[96%] transition-colors duration-600 hover:text-white focus:outline-none text-sm cursor-pointer ${
                     isActive ? 'bg-[#1677ff] text-white rounded-lg' : ''
                 }`}
             >
