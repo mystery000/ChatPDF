@@ -34,7 +34,6 @@ const ChatContent = ({ messages }) => {
                                 ? 'justify-end'
                                 : 'justify-start'
                         }`}
-                        onClick={() => handleClick(message)}
                     >
                         <div
                             className={`${
@@ -69,6 +68,7 @@ const ChatContent = ({ messages }) => {
                                         ? 'text-white'
                                         : 'text-gray-800'
                                 }`}
+                                onClick={() => handleClick(message)}
                             >
                                 {message.loading ? (
                                     <PulseLoader color="#0008" size={5} />
