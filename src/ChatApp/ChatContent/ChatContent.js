@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import TypingAnimationText from './TypingAnimationText'
 import PulseLoader from 'react-spinners/PulseLoader'
 import { Card, Drawer } from 'antd'
 
 const ChatContent = ({ messages }) => {
-    const lastMessageRef = useRef(null)
     const [isOpen, setOpen] = useState(false)
     const [sourceDocuments, setSourceDocuments] = useState([])
 
@@ -17,11 +16,6 @@ const ChatContent = ({ messages }) => {
         setOpen(false)
         setSourceDocuments([])
     }
-
-    useEffect(() => {
-        // 👇️ scroll to bottom every time messages change
-        lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages])
 
     return (
         <div className="flex-1 w-full overflow-auto flex justify-center">
@@ -76,9 +70,7 @@ const ChatContent = ({ messages }) => {
                                     <TypingAnimationText
                                         message={message}
                                         isLastMessage={
-                                            messages.length == index + 1
-                                                ? true
-                                                : false
+                                            messages.length === index + 1
                                         }
                                     />
                                 )}
@@ -86,7 +78,7 @@ const ChatContent = ({ messages }) => {
                         </div>
                     </div>
                 ))}
-                <div ref={lastMessageRef}></div>
+                <div></div>
             </div>
             <Drawer
                 title="Sources"

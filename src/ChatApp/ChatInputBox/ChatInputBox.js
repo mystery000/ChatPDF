@@ -1,36 +1,38 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { HiPaperAirplane } from 'react-icons/hi'
-import { Button, Input, Space } from 'antd'
+import { Input, Space } from 'antd'
 
 const { TextArea } = Input
 
 // import DebouncedInput from './DebouncedInput'
 
-const ChatInputBox = ({ sendANewMessage, processing }) => {
-    const [newMessage, setNewMessage] = useState('')
+const ChatInputBox = ({ handleSubmit }) => {
+    const [query, setQuery] = useState('')
+    const textAreaRef = useRef(null)
 
-    /**
-     * Send message handler
-     * Should empty text field after sent
-     */
+    useEffect(() => {
+        textAreaRef.current?.focus()
+    }, [])
 
-    const doSendMessage = () => {
-        if (
-            newMessage &&
-            newMessage.length > 0 &&
-            newMessage.replace(/\n/g, '').length > 0
-        ) {
-            sendANewMessage(newMessage.trim())
-            setNewMessage('')
+    // handle form submission
+    const handleClick = (e) => {
+        e.preventDefault()
+        if (!query) {
+            alert('Please input a question')
+            return
         }
+        const question = query.trim()
+        handleSubmit(question)
+        setQuery('')
     }
 
-    const onKeyDownHandler = (e) => {
-        if (!e.shiftKey) {
+    //prevent empty submissions
+    const handleEnter = (e) => {
+        if (e.key === 'Enter' && query) {
+            handleClick(e)
+        } else if (e.key == 'Enter') {
             e.preventDefault()
-            if (processing) return
-            doSendMessage()
         }
     }
 
@@ -40,16 +42,16 @@ const ChatInputBox = ({ sendANewMessage, processing }) => {
                 <TextArea
                     allowClear
                     placeholder="Ask any question."
-                    onPressEnter={onKeyDownHandler}
-                    autoSize={{ maxRows: 8 }}
+                    onKeyDown={handleEnter}
+                    autoSize={{ maxRows: 1 }}
                     className="rounded-e-none !pt-[3px]"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    ref={textAreaRef}
                 />
                 <div
-                    disabled={!newMessage || newMessage.length === 0}
                     className="rounded-s-none rounded p-[11px] text-ms font-medium text-center text-white bg-sky-500 hover:bg-sky-600 focus:ring-1 focus:outline-none disabled:opacity-50 mx-0 cursor-pointer flex items-center"
-                    onClick={() => doSendMessage()}
+                    onClick={() => handleClick()}
                 >
                     <HiPaperAirplane className="w-4 h-4 rotate-90" />
                 </div>

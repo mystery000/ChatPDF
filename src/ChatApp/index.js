@@ -7,72 +7,76 @@ import { Empty, Spin } from 'antd'
 
 const Chat = ({ sourceId, isUpdate }) => {
     const { API_URL, ACCESS_TOKEN } = Config
-    const [chatMessages, setChatMessages] = useState([])
-    const [processing, setProcessing] = useState(false)
+    const [messageState, setMessageState] = useState([])
     const [isLoading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
-    const options = {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: ACCESS_TOKEN,
-        },
-    }
+    // handle form submission
+    const handleSubmit = async (query) => {
+        setError(null)
+        const question = query.trim()
 
-    /** Create a new message */
-    const sendANewMessage = (message) => {
-        setProcessing(true)
-        const data = {
-            question: message,
-        }
-        axios
-            .post(`${API_URL}/sources/${sourceId}/chat`, data, options)
-            .then((res) => {
-                const { msgLangchain } = res.data
-                msgLangchain.typingAnimation = true
-                setChatMessages((prev) => {
-                    const messages = [...prev]
-                    messages.pop()
-                    return [...messages, msgLangchain]
-                })
-                setProcessing(false)
+        setMessageState((state) => [
+            ...state,
+            {
+                sentBy: 'User',
+                sentAt: new Date(),
+                isChatOwner: true,
+                text: question,
+            },
+            { isChatOwner: false, loading: true, sentAt: new Date() },
+        ])
+
+        try {
+            const response = await axios.post(
+                `${API_URL}/sources/${sourceId}/chat`,
+                { question: question },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: ACCESS_TOKEN,
+                    },
+                }
+            )
+            const { msgLangchain } = response.data
+            msgLangchain.typingAnimation = true
+
+            setMessageState((state) => {
+                const newState = state.slice(0, -1)
+                return [...newState, msgLangchain]
             })
-            .catch((err) => {
-                console.log(err)
-                setProcessing(false)
-            })
-
-        const msgUser = {
-            sentBy: 'User',
-            sentAt: new Date(),
-            isChatOwner: true,
-            text: message,
+        } catch (error) {
+            setError(error)
+            console.log('error', error)
         }
-        const msgLoading = {
-            isChatOwner: false,
-            loading: true,
-            sentAt: new Date(),
-        }
-        setChatMessages((prev) => [...prev, msgUser, msgLoading])
     }
 
     useEffect(() => {
-        setLoading(true)
-        axios
-            .get(`${API_URL}/sources/${sourceId}/messages`, {
-                headers: {
-                    Authorization: ACCESS_TOKEN,
-                },
-            })
-            .then((res) => {
-                setChatMessages(res.data.messages)
+        const fetchData = async () => {
+            setLoading(true)
+            try {
+                const response = await axios.get(
+                    `${API_URL}/sources/${sourceId}/messages`,
+                    {
+                        headers: {
+                            Authorization: ACCESS_TOKEN,
+                        },
+                    }
+                )
+                setMessageState(response.data.messages)
                 setLoading(false)
-            })
-            .catch((error) => {
+            } catch (error) {
+                setError(error)
                 setLoading(false)
-                setChatMessages([])
-                console.log(error)
-            })
+                console.log('error', error)
+            }
+        }
+        fetchData()
     }, [sourceId, isUpdate])
+
+    if (error) {
+        return <div className="text-center text-red-500">{error}</div>
+    }
 
     return (
         <div className="max-w-full mx-auto mt-2">
@@ -82,17 +86,14 @@ const Chat = ({ sourceId, isUpdate }) => {
                         <Spin tip="Loading"></Spin>
                         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </div>
-                ) : chatMessages.length ? (
-                    <ChatContent messages={chatMessages} />
+                ) : messageState.length ? (
+                    <ChatContent messages={messageState} key={sourceId} />
                 ) : (
                     <div className="flex-1 w-full flex flex-col items-center">
                         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </div>
                 )}
-                <ChatInputBox
-                    sendANewMessage={sendANewMessage}
-                    processing={processing}
-                />
+                <ChatInputBox handleSubmit={handleSubmit} />
             </div>
         </div>
     )
