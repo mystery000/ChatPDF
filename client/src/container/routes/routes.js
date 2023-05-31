@@ -12,6 +12,11 @@ const routes = [
     exact: true,
   },
   {
+    path: 'price/:slug',
+    component: lazy(() => import('../pages/Price/Subscription')),
+    exact: true,
+  },
+  {
     path: 'user/profile',
     component: lazy(() => import('../pages/Profile/Edit')),
     exact: true,

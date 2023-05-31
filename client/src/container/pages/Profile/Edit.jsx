@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Divider, Row, Typography, Table, Tag, Space, Pagination } from 'antd';
+import React from 'react'
+import { Col, Row, Typography } from 'antd';
 import UpdateProfileForm from './Partials/UpdateProfileForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
+import DeleteAccountForm from './Partials/DeleteAccountForm';
 
 const { Title, Text } = Typography;
 
@@ -15,6 +16,9 @@ function Edit() {
         </Col>
         <Col span={24} className='flex justify-center'>
           <UpdatePasswordForm />
+        </Col>
+        <Col span={24} className='flex justify-center'>
+          <DeleteAccountForm />
         </Col>
       </Row>
     </div >

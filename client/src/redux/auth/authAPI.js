@@ -5,17 +5,20 @@ import {
   login, 
   register, 
   loginSuccess, 
-  updateProfile, 
   loginFailure, 
-  logout, 
+  logout,
+  logoutSuccess, 
+  getUser, 
   getUserSuccess, 
   getUserFailure, 
-  getUser, 
+  updateProfile, 
   updateProfileSuccess, 
   updateProfileFailure, 
+  updatePassword,
   updatePasswordSuccess,
   updatePasswordFailure,
-  updatePassword,
+  deleteAccount,
+  deleteAccountFailure,
  } from './authSlice';
 import { getRequest, postRequest } from '../../services/axiosClient';
 import { setStorage } from '../../helpers';
@@ -27,9 +30,10 @@ function* loginAPI(action) {
     yield setStorage('token', response.data.token);
     yield put(loginSuccess(response.data));
   } catch (e) {
+    let email = e.response.data?.errors?.email ?? 'These credentials do not match our records.';
     yield put(loginFailure({
       errors: {
-        email: 'These credentials do not match our records.'
+        email
       }
     }));
   }
@@ -65,11 +69,21 @@ function* updatePasswordAPI(action) {
   }
 }
 
+function* deleteAccountAPI(action) {
+  try {
+    const response = yield call(() => postRequest('users/deleteAccount', action.payload));
+    message.success('Your account successfully deleted!');
+    yield put(logoutSuccess());
+  } catch (e) {
+    yield put(deleteAccountFailure(e.response.data));
+  }
+}
+
 function* logoutAPI() {
   try {
     // const response = yield call(() => postRequest('auth/register', action.payload));
     yield setStorage('token');
-    // yield put(loginSuccess(response.data));
+    yield put(logoutSuccess());
   } catch (e) {
     // yield put(loginFailure(e.response.data));
   }
@@ -86,5 +100,5 @@ function* getUserAPI() {
 }
 
 export default function* rootSaga() {
-  yield all([takeLatest(login, loginAPI), takeLatest(register, registerAPI), takeLatest(logout, logoutAPI), takeLatest(getUser, getUserAPI), takeLatest(updateProfile, updateProfileAPI), takeLatest(updatePassword, updatePasswordAPI)]);
+  yield all([takeLatest(login, loginAPI), takeLatest(register, registerAPI), takeLatest(logout, logoutAPI), takeLatest(getUser, getUserAPI), takeLatest(updateProfile, updateProfileAPI), takeLatest(updatePassword, updatePasswordAPI), takeLatest(deleteAccount, deleteAccountAPI)]);
 }

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Button, Card, Col, Divider, Row, Typography } from 'antd';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { getPlans } from '../../../redux/plan/planSlice';
@@ -12,7 +13,7 @@ function Lists() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(plans.length === 0) {
+    if (plans.length === 0) {
       dispatch(getPlans());
     }
   }, []);
@@ -45,7 +46,9 @@ function Lists() {
                 </div>
               ))}
               <div className="mt-4 text-center">
-                <Button size='large' type="primary w-full">Get Started</Button>
+                <Link to={`/price/${slug}`}>
+                  <Button size='large' type="primary w-full">Get Started</Button>
+                </Link>
               </div>
             </Card>
           </Col>

@@ -13,11 +13,17 @@ const authSlice = createSlice({
   reducers: {
     login(state) {
       state.loader = true;
+      state.errors = {};
     },
     register(state) {
       state.loader = true;
+      state.errors = {};
     },
     logout(state) {
+      state.loader = true;
+      state.errors = {};
+    },
+    logoutSuccess(state) {
       state.loader = false;
       state.isAuthenticated = false;
       state.user = {};
@@ -39,6 +45,7 @@ const authSlice = createSlice({
     },
     getUser(state) {
       state.loader = true;
+      state.errors = {};
     },
     getUserSuccess(state, action) {
       state.loader = false;
@@ -52,6 +59,7 @@ const authSlice = createSlice({
     },
     updateProfile(state) {
       state.loader = true;
+      state.errors = {};
     },
     updateProfileSuccess(state, action) {
       state.loader = false;
@@ -63,11 +71,20 @@ const authSlice = createSlice({
     },
     updatePassword(state) {
       state.loader = true;
+      state.errors = {};
     },
     updatePasswordSuccess(state, action) {
       state.loader = false;
     },
     updatePasswordFailure(state, action) {
+      state.loader = false;
+      state.errors = action.payload.errors;
+    },
+    deleteAccount(state) {
+      state.loader = true;
+      state.errors = {};
+    },
+    deleteAccountFailure(state, action) {
       state.loader = false;
       state.errors = action.payload.errors;
     },
@@ -78,6 +95,7 @@ export const {
   login,
   register,
   logout,
+  logoutSuccess,
   getUser, 
   getUserSuccess, 
   getUserFailure, 
@@ -90,5 +108,7 @@ export const {
   updatePassword,
   updatePasswordSuccess,
   updatePasswordFailure,
+  deleteAccount,
+  deleteAccountFailure,
 } = authSlice.actions;
 export default authSlice.reducer;

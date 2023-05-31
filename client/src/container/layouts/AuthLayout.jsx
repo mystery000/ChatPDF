@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Layout, Menu, Button, Dropdown } from 'antd';
-import { LockOutlined, UserOutlined, AreaChartOutlined, SafetyOutlined, IdcardOutlined, UnorderedListOutlined, WechatOutlined } from '@ant-design/icons';
+import { Layout, Button, Dropdown } from 'antd';
+import { LockOutlined, UserOutlined, AreaChartOutlined, SafetyOutlined, IdcardOutlined, UnorderedListOutlined, CommentOutlined } from '@ant-design/icons';
 
 import LogoSrc from '../../assets/images/logo.png';
 import { logout } from '../../redux/auth/authSlice';
@@ -13,7 +13,7 @@ const items = [
   {
     label: 'Chat',
     key: '/home',
-    icon: <WechatOutlined />,
+    icon: <CommentOutlined />,
   },
   {
     label: 'Price',

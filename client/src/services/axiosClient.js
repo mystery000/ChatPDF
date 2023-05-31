@@ -11,13 +11,16 @@ axiosClient.defaults.headers = constants.headers;
 // To share cookies to cross site domain, change to true.
 // axiosClient.defaults.withCredentials = true;
 
-const token = getStorage('token');
-
-if(token) {
-  axiosClient.defaults.headers['Authorization'] = `${token}`;
-} else {
-  delete axiosClient.defaults.headers['Authorization'];
-}
+// if(token) {
+  axiosClient.interceptors.request.use(function (config) {
+    const token = getStorage('token');
+    config.headers.Authorization =  token;
+    return config;
+  });
+  // axiosClient.defaults.headers.common['Authorization'] = `${token}`;
+// } else {
+  // delete axiosClient.defaults.headers.common['Authorization'];
+// }
 
 export function getRequest(URL, params) {
   return axiosClient.get(`/${URL}`, { params }).then(response => response);
