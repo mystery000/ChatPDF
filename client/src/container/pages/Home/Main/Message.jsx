@@ -1,5 +1,8 @@
-const Message = ({ message }) => {
+import TypingMessage from "../../../../components/TypingMessage";
+
+const Message = ({ message, isLast }) => {
     const { text, isChatOwner } = message;
+    const streamMode = (message.stream || false) && isLast;
 
     return (
         <div
@@ -15,7 +18,7 @@ const Message = ({ message }) => {
                         : "order-2  bg-gray-200  text-gray-800"
                 }`}
             >
-                {text}
+                {streamMode ? <TypingMessage message={text} /> : text}
             </div>
         </div>
     );

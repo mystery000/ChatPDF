@@ -45,7 +45,7 @@ const messageSlice = createSlice({
         },
         sendMessageSuccess(state, action) {
             state.waiting = false;
-            state.messages = [...state.messages, action.payload.apiMessage];
+            state.messages = [...state.messages, {...action.payload.apiMessage, stream: true}];
         },
         sendMessageFailure(state, action) {
             state.waiting = false;

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Input, Space, message } from "antd";
+import { Input, Space } from "antd";
 import { HiPaperAirplane } from "react-icons/hi";
 import { sendMessage } from "../../../../redux/message/messageSlice";
 
@@ -10,7 +10,6 @@ const PromptBox = () => {
     const waiting = useSelector((state) => state.message.waiting);
     const error = useSelector((state) => state.message.promptError);
     const selectedSource = useSelector((state) => state.app.selectedSource);
-    const [messageApi, contextHolder] = message.useMessage();
     const [query, setQuery] = useState("");
     const inputRef = useRef(null);
 
