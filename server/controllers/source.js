@@ -99,7 +99,7 @@ exports.deleteSource = async (req, res) => {
             },
         );
 
-        return res.json({ message: 'Deleted Successfully' });
+        return res.json({ sourceId });
     } catch (err) {
         console.log(err);
         return res.json({ error: err });
@@ -311,7 +311,7 @@ exports.renameSource = async (req, res) => {
                 },
             },
         );
-        res.json({ success: 'Renamed successfully!' });
+        res.json({ status: "OK", name, sourceId });
     } catch (error) {
         return res.json({ error: 'failed to rename document' });
     }

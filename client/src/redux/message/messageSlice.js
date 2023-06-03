@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const initialState = {
     messages: [],
@@ -6,7 +7,10 @@ const initialState = {
     error: {},
     // states for prompt
     waiting: false,
-    promptError: {}
+    promptError: {},
+    // states for delete functionality
+    reseting: false,
+    resetingError: {}
 };
 
 const messageSlice = createSlice({
@@ -27,16 +31,17 @@ const messageSlice = createSlice({
             state.error = action.payload.error;
         },
         deleteMessages(state) {
-            state.loading = true;
-            state.error = {};
+            state.reseting = true;
+            state.resetingError = {};
         },
-        deleteMessagesSuccess(state, action) {
-            state.loading = false;
+        deleteMessagesSuccess(state) {
+            state.reseting = false;
             state.messages = [];
+            message.success('Removed all messages.')
         },
         deleteMessagesFailure(state, action) {
-            state.loading = false;
-            state.error = action.payload.error;
+            state.reseting = false;
+            state.resetingError = action.payload.error;
         },
         sendMessage(state, action) {
             state.messages = [...state.messages, action.payload];

@@ -7,11 +7,22 @@ import {
     uploadSource,
     uploadSourceSuccess,
     uploadSourceFailure,
+    deleteSource,
+    deleteSourceSuccess,
+    deleteSourceFailure,
+    renameSource,
+    renameSourceSuccess,
+    renameSourceFailure,
 } from "./sourceSlice";
 
 import { setSelectedSource } from "../app/appSlice";
 
-import { getRequest, postRequestWithFiles } from "../../services/axiosClient";
+import {
+    getRequest,
+    postRequestWithFiles,
+    deleteRequest,
+    putRequest,
+} from "../../services/axiosClient";
 
 function* getSourcesAPI() {
     try {
@@ -44,9 +55,46 @@ function* uploadSourceAPI(action) {
     }
 }
 
+function* deleteSourceAPI(action) {
+    try {
+        const { sourceId } = action.payload;
+        const response = yield call(() => deleteRequest(`sources/${sourceId}`));
+        yield put(deleteSourceSuccess(response.data));
+        yield put(setSelectedSource(""));
+    } catch (error) {
+        yield put(
+            deleteSourceFailure({
+                error: {
+                    message: `Failed to upload files due to ${error?.message}`,
+                },
+            })
+        );
+    }
+}
+
+function* renameSourceAPI(action) {
+    try {
+        const { sourceId } = action.payload;
+        const response = yield call(() =>
+            putRequest(`sources/${sourceId}`, action.payload)
+        );
+        yield put(renameSourceSuccess(response.data));
+    } catch (error) {
+        yield put(
+            renameSourceFailure({
+                error: {
+                    message: `Failed to upload files due to ${error?.message}`,
+                },
+            })
+        );
+    }
+}
+
 export default function* rootSaga() {
     yield all([
         takeLatest(getSources, getSourcesAPI),
         takeLatest(uploadSource, uploadSourceAPI),
+        takeLatest(deleteSource, deleteSourceAPI),
+        takeLatest(renameSource, renameSourceAPI),
     ]);
 }

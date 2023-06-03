@@ -37,10 +37,8 @@ function* getMessagesAPI(action) {
 function* deleteMessagesAPI(action) {
     try {
         const { sourceId } = action.payload;
-        const response = yield call(() =>
-            deleteRequest(`sources/${sourceId}/messages`)
-        );
-        yield put(deleteMessagesSuccess(response.data));
+        yield call(() => deleteRequest(`sources/${sourceId}/messages`));
+        yield put(deleteMessagesSuccess());
     } catch (err) {
         yield put(
             deleteMessagesFailure({
@@ -53,7 +51,9 @@ function* deleteMessagesAPI(action) {
 function* sendMessageAPI(action) {
     try {
         const { sourceId, text } = action.payload;
-        const response = yield call(() => postRequest(`sources/${sourceId}/chat`, {question: text}));
+        const response = yield call(() =>
+            postRequest(`sources/${sourceId}/chat`, { question: text })
+        );
         yield put(sendMessageSuccess(response.data));
     } catch (error) {
         yield put(

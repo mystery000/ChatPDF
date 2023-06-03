@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 
 const initialState = {
     sources: [],
@@ -6,6 +7,10 @@ const initialState = {
     error: {},
     uploading: false,
     uploadingError: {},
+    deleting: false,
+    deletingError: {},
+    renaming: false,
+    renamingError: {},
 };
 
 const sourceSlice = createSlice({
@@ -37,6 +42,41 @@ const sourceSlice = createSlice({
             state.uploading = false;
             state.uploadingError = action.payload.error;
         },
+        deleteSource(state) {
+            state.deleting = true;
+            state.deletingError = {};
+        },
+        deleteSourceSuccess(state, action) {
+            state.deleting = false;
+            state.sources = state.sources.filter(
+                ({ sourceId }) => sourceId != action.payload.sourceId
+            );
+            message.success("Deleted property");
+        },
+        deleteSourceFailure(state, action) {
+            state.deleting = false;
+            state.error = action.payload.error;
+            message.error("Failed to delete property.");
+        },
+        renameSource(state) {
+            state.renaming = true;
+            state.renamingError = {};
+        },
+        renameSourceSuccess(state, action) {
+            state.renaming = false;
+            const { sourceId, name } = action.payload;
+            state.sources = state.sources.map((source) => {
+                if (source.sourceId === sourceId) {
+                    source.name = name;
+                    return source;
+                }
+                return source;
+            });
+        },
+        renameSourceFailure(state, action) {
+            state.renaming = false;
+            state.renamingError = action.payload.error;
+        },
     },
 });
 
@@ -47,6 +87,12 @@ export const {
     uploadSource,
     uploadSourceSuccess,
     uploadSourceFailure,
+    deleteSource,
+    deleteSourceSuccess,
+    deleteSourceFailure,
+    renameSource,
+    renameSourceSuccess,
+    renameSourceFailure
 } = sourceSlice.actions;
 
 export default sourceSlice.reducer;
