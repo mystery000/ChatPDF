@@ -7,9 +7,16 @@ import {
     deleteMessages,
     deleteMessagesSuccess,
     deleteMessagesFailure,
+    sendMessage,
+    sendMessageSuccess,
+    sendMessageFailure,
 } from "./messageSlice";
 
-import { getRequest, deleteRequest } from "../../services/axiosClient";
+import {
+    getRequest,
+    deleteRequest,
+    postRequest,
+} from "../../services/axiosClient";
 
 function* getMessagesAPI(action) {
     try {
@@ -43,9 +50,27 @@ function* deleteMessagesAPI(action) {
     }
 }
 
+function* sendMessageAPI(action) {
+    try {
+        const { sourceId, text } = action.payload;
+        const response = yield call(() => postRequest(`sources/${sourceId}/chat`, {question: text}));
+        yield put(sendMessageSuccess(response.data));
+    } catch (error) {
+        yield put(
+            sendMessageFailure({
+                error: {
+                    message:
+                        "An error occurred while fetching the data. Please try again.",
+                },
+            })
+        );
+    }
+}
+
 export default function* rootSaga() {
     yield all([
         takeLatest(getMessages, getMessagesAPI),
         takeLatest(deleteMessages, deleteMessagesAPI),
+        takeLatest(sendMessage, sendMessageAPI),
     ]);
 }

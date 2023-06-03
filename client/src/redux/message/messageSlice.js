@@ -4,6 +4,9 @@ const initialState = {
     messages: [],
     loading: false,
     error: {},
+    // states for prompt
+    waiting: false,
+    promptError: {}
 };
 
 const messageSlice = createSlice({
@@ -29,11 +32,24 @@ const messageSlice = createSlice({
         },
         deleteMessagesSuccess(state, action) {
             state.loading = false;
-            state.messages = []
+            state.messages = [];
         },
         deleteMessagesFailure(state, action) {
             state.loading = false;
             state.error = action.payload.error;
+        },
+        sendMessage(state, action) {
+            state.messages = [...state.messages, action.payload];
+            state.waiting = true;
+            state.promptError = {};
+        },
+        sendMessageSuccess(state, action) {
+            state.waiting = false;
+            state.messages = [...state.messages, action.payload.apiMessage];
+        },
+        sendMessageFailure(state, action) {
+            state.waiting = false;
+            state.promptError = action.payload.error;
         },
     },
 });
@@ -45,6 +61,9 @@ export const {
     deleteMessages,
     deleteMessagesSuccess,
     deleteMessagesFailure,
+    sendMessage,
+    sendMessageSuccess,
+    sendMessageFailure,
 } = messageSlice.actions;
 
 export default messageSlice.reducer;

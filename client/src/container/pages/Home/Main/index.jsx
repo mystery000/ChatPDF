@@ -24,10 +24,13 @@ const Main = () => {
     if (messages.length == 0) return <EmptyComponent />;
 
     return (
-        <div className="max-w-full mx-auto" style={{borderTop: '1px solid #f3f3f3'}}>
+        <div
+            className="max-w-full mx-auto"
+            style={{ borderTop: "1px solid #f3f3f3" }}
+        >
             <div className="bg-white flex flex-col max-h-[calc(100vh_-_70px)] h-[calc(100vh_-_70px)]">
                 <MessageList messages={messages} />
-                <PromptBox />   
+                <PromptBox />
             </div>
         </div>
     );

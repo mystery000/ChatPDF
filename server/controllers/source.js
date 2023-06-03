@@ -169,7 +169,6 @@ exports.getMessagesFromSource = async (req, res) => {
 exports.chat = async (req, res) => {
     const sourceId = req.params.sourceId;
     const { question } = req.body;
-
     // OpenAI recommends replacing newlines with spaces for best results
     const sanitizedQuestion = question.trim().replaceAll('\n', ' ');
 
@@ -230,7 +229,7 @@ exports.chat = async (req, res) => {
                 },
             },
         );
-        return res.status(200).json({ msgLangchain });
+        return res.status(200).json({ apiMessage: msgLangchain });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Something went wrong' });
@@ -258,7 +257,7 @@ exports.getDocumentsFromSource = async (req, res) => {
         const documents = data.sources[0].documents;
         return res.json({ documents });
     } catch (error) {
-        console.log(error);
+        console.log(error?.message);
         return res.json({ error: 'failed to query mongodb' });
     }
 };
