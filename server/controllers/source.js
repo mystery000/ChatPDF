@@ -66,7 +66,7 @@ exports.uploadfiles = async (req, res) => {
                         },
                     },
                 );
-                return res.json({ sourceId: indexId });
+                return res.json({ sourceId: indexId, name: sourceName });
             }
         }
         return res.json({ message: 'No files' });
@@ -280,7 +280,10 @@ exports.getDocumentsFromSource = async (req, res) => {
 */
 
 exports.getSources = (req, res) => {
-    const sources = req.user.sources;
+    const sources = req.user.sources.map(({ sourceId, name }) => ({
+        sourceId,
+        name,
+    }));
     res.json({ sources });
 };
 
