@@ -37,10 +37,12 @@ const sourceSlice = createSlice({
         uploadSourceSuccess(state, action) {
             state.uploading = false;
             state.sources = [...state.sources, action.payload];
+            message.success("Uploaded property successfully!");
         },
         uploadSourceFailure(state, action) {
             state.uploading = false;
             state.uploadingError = action.payload.error;
+            message.error("Oops! Failed to upload property.");
         },
         deleteSource(state) {
             state.deleting = true;
@@ -92,7 +94,7 @@ export const {
     deleteSourceFailure,
     renameSource,
     renameSourceSuccess,
-    renameSourceFailure
+    renameSourceFailure,
 } = sourceSlice.actions;
 
 export default sourceSlice.reducer;

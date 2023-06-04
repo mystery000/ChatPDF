@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Document = require('../models/document');
 const emptyFolder = require('../utils/emptyFolder');
 const { ingest } = require('../scripts/ingest-data');
 const { initPinecone } = require('../utils/pinecone-client');
@@ -34,17 +35,15 @@ exports.uploadfiles = async (req, res) => {
             // Embedding PDF files into the Pinecone, returns id of pinecone index
             const dir = `public/files/${email}`;
             const indexId = await ingest(dir, sourceId);
-            const documents = files.map((file) => file.filename);
+
             await emptyFolder(dir);
             if (sourceId) {
-                await User.findOneAndUpdate(
-                    { _id: req.user._id, 'sources.sourceId': sourceId },
-                    {
-                        $push: {
-                            'sources.$.documents': [...documents],
-                        },
-                    },
-                );
+                const documents = files.map((file) => ({
+                    name: file.filename,
+                    email: email,
+                    sourceId: sourceId,
+                }));
+                await Document.insertMany(documents);
                 return res.json({ documents: documents });
             } else {
                 await User.findOneAndUpdate(
@@ -54,7 +53,6 @@ exports.uploadfiles = async (req, res) => {
                             sources: {
                                 name: sourceName,
                                 sourceId: indexId,
-                                documents: [...documents],
                                 messages: [
                                     {
                                         text: 'Welcome, What can I help you?',
@@ -66,6 +64,12 @@ exports.uploadfiles = async (req, res) => {
                         },
                     },
                 );
+                const documents = files.map((file) => ({
+                    name: file.filename,
+                    email: email,
+                    sourceId: indexId,
+                }));
+                await Document.insertMany(documents);
                 return res.json({ sourceId: indexId, name: sourceName });
             }
         }
@@ -236,7 +240,7 @@ exports.chat = async (req, res) => {
     }
 };
 /*
-    GET http://localhost:5000/apis/sources/:sourceId HTTP/1.1
+    GET http://localhost:5000/apis/sources/documents HTTP/1.1
 
     Authorization: Bearer
 
@@ -245,20 +249,19 @@ exports.chat = async (req, res) => {
 */
 
 exports.getDocumentsFromSource = async (req, res) => {
-    const sourceId = req.params.sourceId;
     try {
-        const data = await User.findOne(
-            {
-                _id: req.user._id,
-                'sources.sourceId': sourceId,
-            },
-            'sources.documents.$',
-        );
-        const documents = data.sources[0].documents;
-        return res.json({ documents });
+        const { email } = req.user;
+        const documents = await Document.find({ email })
+        console.log(documents)
+        res.status(200).send({ documents });
     } catch (error) {
-        console.log(error?.message);
-        return res.json({ error: 'failed to query mongodb' });
+        console.log(error);
+        return res.status(500).json({
+            status: 'Failed',
+            data: {
+                error: error.message,
+            },
+        });
     }
 };
 /*
@@ -311,7 +314,7 @@ exports.renameSource = async (req, res) => {
                 },
             },
         );
-        res.json({ status: "OK", name, sourceId });
+        res.json({ status: 'OK', name, sourceId });
     } catch (error) {
         return res.json({ error: 'failed to rename document' });
     }
