@@ -19,10 +19,10 @@ import { getStorage } from './helpers';
 import { getUser } from './redux/auth/authSlice';
 
 const storeProvider = store();
-// const token = getStorage('token');
-// if(token) {
-//   storeProvider.dispatch();
-// }
+const token = getStorage('token');
+if(token) {
+  storeProvider.dispatch(getUser());
+}
 
 function App() {
   return (

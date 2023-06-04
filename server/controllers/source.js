@@ -28,11 +28,14 @@ exports.uploadfiles = async (req, res) => {
         const files = req.files;
         const sourceId = req.body.sourceId;
         const sourceName = req.body.sourceName || 'Untitled';
+        const { email } = req.user;
+
         if (files.length) {
             // Embedding PDF files into the Pinecone, returns id of pinecone index
-            const indexId = await ingest('public/files', sourceId);
+            const dir = `public/files/${email}`;
+            const indexId = await ingest(dir, sourceId);
             const documents = files.map((file) => file.filename);
-            await emptyFolder('public/files');
+            await emptyFolder(dir);
             if (sourceId) {
                 await User.findOneAndUpdate(
                     { _id: req.user._id, 'sources.sourceId': sourceId },
@@ -63,7 +66,7 @@ exports.uploadfiles = async (req, res) => {
                         },
                     },
                 );
-                return res.json({ sourceId: indexId });
+                return res.json({ sourceId: indexId, name: sourceName });
             }
         }
         return res.json({ message: 'No files' });
@@ -96,7 +99,7 @@ exports.deleteSource = async (req, res) => {
             },
         );
 
-        return res.json({ message: 'Deleted Successfully' });
+        return res.json({ sourceId });
     } catch (err) {
         console.log(err);
         return res.json({ error: err });
@@ -166,7 +169,6 @@ exports.getMessagesFromSource = async (req, res) => {
 exports.chat = async (req, res) => {
     const sourceId = req.params.sourceId;
     const { question } = req.body;
-
     // OpenAI recommends replacing newlines with spaces for best results
     const sanitizedQuestion = question.trim().replaceAll('\n', ' ');
 
@@ -227,7 +229,7 @@ exports.chat = async (req, res) => {
                 },
             },
         );
-        return res.status(200).json({ msgLangchain });
+        return res.status(200).json({ apiMessage: msgLangchain });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Something went wrong' });
@@ -255,7 +257,7 @@ exports.getDocumentsFromSource = async (req, res) => {
         const documents = data.sources[0].documents;
         return res.json({ documents });
     } catch (error) {
-        console.log(error);
+        console.log(error?.message);
         return res.json({ error: 'failed to query mongodb' });
     }
 };
@@ -278,7 +280,10 @@ exports.getDocumentsFromSource = async (req, res) => {
 */
 
 exports.getSources = (req, res) => {
-    const sources = req.user.sources;
+    const sources = req.user.sources.map(({ sourceId, name }) => ({
+        sourceId,
+        name,
+    }));
     res.json({ sources });
 };
 
@@ -306,7 +311,7 @@ exports.renameSource = async (req, res) => {
                 },
             },
         );
-        res.json({ success: 'Renamed successfully!' });
+        res.json({ status: "OK", name, sourceId });
     } catch (error) {
         return res.json({ error: 'failed to rename document' });
     }
