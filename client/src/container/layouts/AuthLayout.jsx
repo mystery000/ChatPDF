@@ -27,7 +27,8 @@ const items = [
   },
   {
     label: 'Admin',
-    key: '/admin',
+    key: 'admin',
+    type: 'group',
     icon: <SafetyOutlined />,
     children: [
       {
@@ -74,7 +75,7 @@ function AuthLayout({
         <div className='w-[200px]'>
           <Dropdown
             menu={{
-              items,
+              items: items.filter(item => item.key != 'admin' || (item.key == 'admin' && user.isAdmin)),
               onClick: handleClick,
             }}
             trigger='click'

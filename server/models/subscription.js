@@ -5,8 +5,12 @@ const Schema = mongoose.Schema;
 const SubscriptionSchema = new Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'users',
+    },
+    planId: {
+      type: Schema.Types.ObjectId,
+      ref: 'plans',
     },
     name: {
       type: String,
@@ -19,7 +23,7 @@ const SubscriptionSchema = new Schema(
     },
     stripe_status: {
       type: String,
-      required: true,
+      default: 'ACTIVE',
     },
     stripe_price: {
       type: String,
@@ -28,6 +32,9 @@ const SubscriptionSchema = new Schema(
       type: Date,
     },
     ends_at: {
+      type: Date,
+    },
+    next_payment_at: {
       type: Date,
     }
   },

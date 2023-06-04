@@ -5,7 +5,6 @@ import { getStorage } from '../helpers';
 const axiosClient = axios.create();
 
 axiosClient.defaults.baseURL = constants.HOST_URL;
-console.log(axiosClient.defaults.baseURL)
 axiosClient.defaults.headers = constants.headers;
 
 // To share cookies to cross site domain, change to true.

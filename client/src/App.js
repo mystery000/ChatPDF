@@ -19,10 +19,6 @@ import { getStorage } from './helpers';
 import { getUser } from './redux/auth/authSlice';
 
 const storeProvider = store();
-// const token = getStorage('token');
-// if(token) {
-//   storeProvider.dispatch();
-// }
 
 function App() {
   return (

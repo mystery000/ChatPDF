@@ -1,26 +1,44 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import { Button, Card, Col, Divider, Row, Typography } from 'antd';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { getPlans } from '../../../redux/plan/planSlice';
+import { createSubscription, getUserSubscription } from '../../../services/planAPI';
 
 const { Title, Text } = Typography;
 
 function Lists() {
 
-  const plans = useSelector(state => state.plan.plans);
+  const plans = useSelector(state => state.plan.plans ?? []);
   const dispatch = useDispatch();
+  const [actSub, setActSub] = useState({});
+  const [selSub, setSelSub] = useState({});
 
   useEffect(() => {
     if (plans.length === 0) {
       dispatch(getPlans());
     }
+    getUserSubscription().then(res => {
+      setActSub(res.data.activeSubscription ?? {});
+      setSelSub(res.data.selectedSubscription ?? {});
+    });
   }, []);
+
+  const handleClick = async (id) => {
+    await createSubscription({
+      planId: id,
+    });
+    getUserSubscription().then(res => {
+      setActSub(res.data.activeSubscription ?? {});
+      setSelSub(res.data.selectedSubscription ?? {});
+    });
+  }
 
   return (
     <div className='container mx-auto my-4'>
-      <Row gutter={[16, 16]}>
+      <Row align='stretch' gutter={[16, 16]}>
         <Col span={24}>
           <Title level={3} className='text-center mt-5'>
             Find the perfect plan for your team, or try it for free!
@@ -30,25 +48,35 @@ function Lists() {
           _id, name, slug, description, price, services
         }) => (
           <Col span={6} key={_id}>
-            <Card className='shadow-lg'>
-              <div>
-                <Title level={4}>
-                  {name}
-                </Title>
-                <Text type='secondary' className='word-break'>{description}</Text>
-              </div>
-              <Divider />
-              {price > 0 && <Title level={3}>${price}<Text type='secondary'>/month</Text></Title>}
-              {price == 0 && <Title level={3}>Free</Title>}
-              {services.map((service, index) => (
-                <div className='my-2' key={index}>
-                  <CheckCircleTwoTone /> <span className='text-lg'>{service}</span>
+            <Card className='shadow-lg h-full'>
+              <div className="flex flex-col justify-between">
+                <div>
+                  <Title level={4}>
+                    {name}
+                  </Title>
+                  <Text type='secondary' className='word-break'>{description}</Text>
                 </div>
-              ))}
-              <div className="mt-4 text-center">
-                <Link to={`/price/${slug}`}>
-                  <Button size='large' type="primary w-full">Get Started</Button>
-                </Link>
+                <Divider />
+                {price > 0 && <Title level={3}>${price}<Text type='secondary'>/month</Text></Title>}
+                {price == 0 && <Title level={3}>Free</Title>}
+                {services.map((service, index) => (
+                  <div className='my-2' key={index}>
+                    <CheckCircleTwoTone /> <span className='text-lg'>{service}</span>
+                  </div>
+                ))}
+                <div className="mt-4 text-center">
+                  {actSub?.planId?._id == _id && <div>
+                    <span className='text-[15px] cursor-default'>Current Plan</span> <br />
+                    {selSub?.planId && <span className='text-blue-500 cursor-pointer' onClick={() => handleClick(_id)}>Continue this plan</span>}
+                    {!selSub?.planId && <span className='text-gray-500 cursor-default'>Renew at {moment(actSub?.next_payment_at).format('MM/DD/YY')}</span>}
+                  </div>}
+                  {selSub?.planId?._id == _id && <div><span className='text-[15px] cursor-default'>Selected Plan</span> <br /> 
+                  <span className='text-gray-500 cursor-default'>Start at {moment(selSub?.next_payment_at).format('MM/DD/YY')}</span>
+                  </div>}
+                  {(actSub?.planId?._id != _id && selSub?.planId?._id != _id) && <Link to={`/price/${slug}`}>
+                    <Button size='large' type="primary" block>{!actSub._id ? 'Get Started' : (actSub.planId?.price > price ? 'Downgrade' : 'Upgrade')}</Button>
+                  </Link>}
+                </div>
               </div>
             </Card>
           </Col>

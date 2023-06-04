@@ -29,10 +29,9 @@ function GuestLayout({
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const handleClick = ({ item, key }) => {
     dispatch(clearErrors());
-    navigate(key);
+    navigate(key + location.search);
   }
 
   return (

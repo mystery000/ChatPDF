@@ -1,9 +1,20 @@
+import jwt_decode from "jwt-decode";
 import { createSlice } from '@reduxjs/toolkit'
+import { getStorage } from "../../helpers";
 
+let token = getStorage('token');
+let user = {};
+if(token) {
+  user = jwt_decode(token);
+  if((user.exp * 1000) < Date.now()) {
+    token = null;
+    user = {};
+  }
+}
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: !!token,
   loader: false,
-  user: {},
+  user,
   errors: {},
 }
 

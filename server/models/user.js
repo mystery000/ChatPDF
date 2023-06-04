@@ -19,12 +19,9 @@ const UserSchema = new Schema(
             type: String,
             required: true,
         },
-
-        role: {
-            type: String,
-            enum: ['admin', 'user'],
-            default: 'user',
-            required: true,
+        permission: {
+            type: Number,
+            default: 2,
         },
         sources: [
             {
@@ -70,7 +67,19 @@ const UserSchema = new Schema(
         },
         trial_ends_at: {
             type: Date,
-        }
+        },
+        status: {
+            type: Number,
+            default: 1,
+        },
+        activeSubscriptionId: {
+            type: Schema.Types.ObjectId,
+            ref: 'subscriptions',
+        },
+        selectedSubscriptionId: {
+            type: Schema.Types.ObjectId,
+            ref: 'subscriptions',
+        },
     },
     {
         timestamps: true,
@@ -78,6 +87,8 @@ const UserSchema = new Schema(
 );
 
 UserSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+
     const user = this;
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;

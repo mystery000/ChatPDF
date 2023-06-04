@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { Form, Input, Button, Checkbox, Card, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { register } from '../../../redux/auth/authSlice';
@@ -9,12 +10,13 @@ const { Title } = Typography;
 
 function Register() {
   const [form] = Form.useForm();
+  const location = useLocation();
   const loader = useSelector(state => state.auth.loader);
   const errors = useSelector(state => state.auth.errors);
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    dispatch(register(values));
+    // console.log('Received values of form: ', values);
+    dispatch(register({...values, search: location.search}));
   };
   return (
     <GuestLayout>

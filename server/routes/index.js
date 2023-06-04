@@ -13,7 +13,7 @@ const authMiddleware = require('../middlewares/auth');
 const { jwtAuth } = authMiddleware;
 
 router.get('/', (req, res) => {
-    res.json({
+    return res.json({
         message: 'This is API interface',
     });
 });

@@ -5,6 +5,8 @@ const cors = require('cors');
 const config = require('./config');
 const http = require('http');
 const socketIO = require('./scripts/socketio');
+const webhook = require('./controllers/webhook');
+const api = require('./routes');
 
 mongoose
     .connect(config.MongoURL)
@@ -14,15 +16,14 @@ mongoose
 const app = express();
 const server = http.createServer(app);
 socketIO.init(server);
-
+app.set("view engine", "ejs");
 app.use(cors({ origin: '*' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.static(`${__dirname}/public`));
-
-const api = require('./routes');
 app.use('/apis', api);
+app.post('/stripe/webhook', express.raw({type: '*/*'}), webhook.index);
 
 // Handle errors.
 app.use(function (err, req, res, next) {

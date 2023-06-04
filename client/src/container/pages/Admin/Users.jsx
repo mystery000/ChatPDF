@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Divider, Row, Typography, Table, Tag, Space, Pagination } from 'antd';
+import { Button, Col, Row, Typography, Table, Tag, Space, Pagination } from 'antd';
 import { getAllUsers } from '../../../services/userAPI';
 
 const { Title, Text } = Typography;
@@ -14,6 +14,16 @@ const columns = [
     title: 'Email',
     dataIndex: 'email',
     key: 'email',
+  },
+  {
+    title: '🛒',
+    dataIndex: '_id',
+    key: 'activeSubscriptionId',
+    render: (_, row) => {
+      if(row.activeSubscriptionId?.planId?.price) {
+        return <Tag color='#108ee9'>${row.activeSubscriptionId?.planId?.price}</Tag>
+      }
+    } 
   },
   {
     title: 'UTM source',
@@ -40,7 +50,7 @@ const columns = [
     key: '_id',
     render: (_, row) => (
       <Space size="middle">
-        <a>Invite {row.name}</a>
+        <a>{row.name}</a>
       </Space>
     ),
   },
