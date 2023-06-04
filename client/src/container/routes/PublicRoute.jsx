@@ -10,10 +10,7 @@ function PublicRoute() {
   const location = useLocation();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   
-  return !isAuthenticated ? <Outlet /> : <Navigate to={{
-      pathname: '/home',
-      state: {from: location},
-    }} />
+  return !isAuthenticated ? <Outlet /> : <Navigate to='/home' />
 }
 
 export default PublicRoute;

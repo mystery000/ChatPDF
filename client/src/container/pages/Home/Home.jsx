@@ -8,7 +8,11 @@ const { Content, Sider } = Layout;
 function Home() {
     return (
         <Layout>
-            <Sider theme={"dark"} width={250}>
+            <Sider
+                theme={"dark"}
+                width={250}
+                className="hidden sm:block"
+            >
                 <SourceUploader />
                 <SideBar />
             </Sider>

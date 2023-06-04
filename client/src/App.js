@@ -15,8 +15,6 @@ import PrivateRoute from './container/routes/PrivateRoute';
 import ProtectedRoutes from './container/routes/ProtectedRoutes';
 import Login from './container/pages/Auth/Login';
 import Register from './container/pages/Auth/Register';
-import { getStorage } from './helpers';
-import { getUser } from './redux/auth/authSlice';
 
 const storeProvider = store();
 
@@ -24,7 +22,7 @@ function App() {
   return (
     <Provider store={storeProvider}>
       <Router>
-        <Suspense fallback={<div className='w-screen h-screen flex items-center justify-center bg-gray-500'>
+        <Suspense fallback={<div className='w-screen h-screen flex items-center justify-center bg-[#0005]'>
           <HashLoader
             color="#eee"
             loading

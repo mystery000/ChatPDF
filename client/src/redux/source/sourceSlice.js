@@ -36,7 +36,8 @@ const sourceSlice = createSlice({
         },
         uploadSourceSuccess(state, action) {
             state.uploading = false;
-            state.sources = [...state.sources, action.payload];
+            const {documents, ...rest} = action.payload;
+            state.sources = [...state.sources, rest];
             message.success("Uploaded property successfully!");
         },
         uploadSourceFailure(state, action) {

@@ -40,11 +40,10 @@ exports.uploadfiles = async (req, res) => {
             if (sourceId) {
                 const documents = files.map((file) => ({
                     name: file.filename,
-                    email: email,
                     sourceId: sourceId,
                 }));
-                await Document.insertMany(documents);
-                return res.json({ documents: documents });
+                const docs = await Document.insertMany(documents);
+                return res.json({ documents: docs });
             } else {
                 await User.findOneAndUpdate(
                     { _id: req.user._id },
@@ -66,11 +65,10 @@ exports.uploadfiles = async (req, res) => {
                 );
                 const documents = files.map((file) => ({
                     name: file.filename,
-                    email: email,
                     sourceId: indexId,
                 }));
-                await Document.insertMany(documents);
-                return res.json({ sourceId: indexId, name: sourceName });
+                const docs = await Document.insertMany(documents);
+                return res.json({ sourceId: indexId, name: sourceName, documents: docs });
             }
         }
         return res.json({ message: 'No files' });
@@ -155,7 +153,7 @@ exports.getMessagesFromSource = async (req, res) => {
             },
             'sources.messages.$',
         );
-        const messages = data.sources[0].messages;
+        const messages = data?.sources[0]?.messages ?? [];
         return res.json({ messages });
     } catch (error) {
         console.log(error);

@@ -16,6 +16,7 @@ import {
 } from "./sourceSlice";
 
 import { setSelectedSource } from "../app/appSlice";
+import { uploadDocumentSucess } from "../document/documentSlice";
 
 import {
     getRequest,
@@ -23,6 +24,8 @@ import {
     deleteRequest,
     putRequest,
 } from "../../services/axiosClient";
+
+import { setStorage } from "../../helpers";
 
 function* getSourcesAPI() {
     try {
@@ -42,8 +45,11 @@ function* uploadSourceAPI(action) {
         const response = yield call(() =>
             postRequestWithFiles("sources/upload", action.payload)
         );
-        yield put(uploadSourceSuccess(response.data));
-        yield put(setSelectedSource(response.data));
+        yield put(uploadDocumentSucess(response.data));
+        if(response.data?.sourceId) {
+            yield put(setSelectedSource(response.data));
+            yield put(uploadSourceSuccess(response.data));
+        }
     } catch (error) {
         yield put(
             uploadSourceFailure({
@@ -59,8 +65,9 @@ function* deleteSourceAPI(action) {
     try {
         const { sourceId } = action.payload;
         const response = yield call(() => deleteRequest(`sources/${sourceId}`));
+        yield setStorage('latestKey');
         yield put(deleteSourceSuccess(response.data));
-        yield put(setSelectedSource(""));
+        yield put(setSelectedSource(''));
     } catch (error) {
         yield put(
             deleteSourceFailure({

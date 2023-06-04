@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FormData from "form-data";
-import { InboxOutlined } from "@ant-design/icons";
-import { Form, Input, Modal, Progress, Upload, message } from "antd";
+import { InboxOutlined, PlusOutlined } from "@ant-design/icons";
+import { Form, Input, Modal, Progress, Spin, Upload, message } from "antd";
 import { uploadSource } from "../../../../redux/source/sourceSlice";
 
 const SourceUploader = () => {
@@ -17,11 +17,13 @@ const SourceUploader = () => {
     return (
         <div className="text-center">
             <button
-                className="bg-transparent text-white border border-white border-dashed hover:border-indigo-500 font-bold uppercase text-sm rounded shadow hover:shadow-lg outline-none focus:outline-none m-2 ease-linear transition-all duration-150 px-14 py-3"
+                className="bg-transparent text-white border border-white border-dashed hover:border-indigo-500 font-bold uppercase text-sm rounded shadow hover:shadow-lg outline-none focus:outline-none m-2 ease-linear transition-all duration-150 px-12 py-3 cursor-pointer flex items-center"
                 type="button"
                 onClick={() => setShowModal(true)}
             >
-                + Add Property
+                {!uploading && <PlusOutlined className="text-white mr-1" />}
+                {uploading && <Spin size="small" className="mr-1" />}
+                Add Property
             </button>
 
             <Modal
@@ -50,7 +52,7 @@ const SourceUploader = () => {
                             console.log("Validate Failed:", info);
                         });
                 }}
-                okButtonProps={{ className: "bg-blue-600", loading: uploading }}
+                okButtonProps={{ loading: uploading }}
             >
                 <Form form={form} layout="vertical">
                     <Form.Item

@@ -22,10 +22,14 @@ const documentSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
         },
+        uploadDocumentSucess(state, action) {
+            state.loading = false;
+            state.documents = [... state.documents, ...action.payload.documents];
+        }
     },
 });
 
-export const { getDocuments, getDocumentsSuccess, getDocumentsFailure } =
+export const { getDocuments, getDocumentsSuccess, getDocumentsFailure, uploadDocumentSucess } =
     documentSlice.actions;
 
 export default documentSlice.reducer;

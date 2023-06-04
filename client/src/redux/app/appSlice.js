@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setStorage } from "../../helpers";
 
 const initialState = {
     selectedSource: "",
@@ -9,7 +10,10 @@ const appSlice = createSlice({
     initialState,
     reducers: {
         setSelectedSource(state, action) {
-            state.selectedSource = action.payload.sourceId;
+            if(action.payload.sourceId) {
+                setStorage('latestKey', action.payload.sourceId);
+                state.selectedSource = action.payload.sourceId;
+            }
         },
     },
 });

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { TbDotsVertical } from "react-icons/tb";
-import { AiOutlineDelete, AiOutlineEdit, AiOutlineClear } from "react-icons/ai";
-import { Input, Modal, Popconfirm } from "antd";
+import { MenuUnfoldOutlined, DeleteOutlined, EditOutlined, ClearOutlined, CloseOutlined } from "@ant-design/icons";
+import { Drawer, Input, Menu, Modal, Popconfirm } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
     deleteSource,
@@ -9,15 +8,27 @@ import {
 } from "../../../../redux/source/sourceSlice";
 
 import { deleteMessages } from "../../../../redux/message/messageSlice";
+import SourceUploader from "../Modals/SourceUploader";
+import SideBar from "../SideBar";
 
 const ToolBar = () => {
+
     const dispatch = useDispatch();
     const deleting = useSelector((state) => state.source.deleting);
     const renaming = useSelector((state) => state.source.renaming);
     const reseting = useSelector((state) => state.source.reseting);
     const selectedSource = useSelector((state) => state.app.selectedSource);
     const [renameModalOpen, setRenameModalOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const [propertyName, setPropertyName] = useState("");
+
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
 
     const handleChange = (e) => {
         setPropertyName(e.target.value);
@@ -35,78 +46,93 @@ const ToolBar = () => {
         e.preventDefault();
         dispatch(deleteSource({ sourceId: selectedSource }));
     };
-    const handleReset = (e) => {
-        e.preventDefault();
+    const handleReset = () => {
+        // e.preventDefault();
         dispatch(deleteMessages({ sourceId: selectedSource }));
     };
 
+    const tools = [
+        {
+            title: "Open Documents",
+            label: <span className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]">
+                <MenuUnfoldOutlined className="!text-[18px]" />
+            </span>,
+            className: "!inline sm:!hidden",
+            onClick: showDrawer,
+        },
+        {
+            title: "Delete Property",
+            label: <Popconfirm
+                placement="bottomLeft"
+                description={
+                    "Are you sure you want to delete this property?"
+                }
+                onConfirm={handleDelete}
+                okText="Yes"
+                okButtonProps={{
+                    className:
+                        "bg-red-600 hover:!bg-red-500 text-white",
+                }}
+                cancelText="No"
+                icon={false}
+            >
+                <span
+                    className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
+                >
+                    <DeleteOutlined className="!text-[18px]" />
+                </span>
+            </Popconfirm>
+        },
+        {
+            title: "Rename Property",
+            label: <span
+                className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
+            >
+                <EditOutlined className="!text-[18px]" />
+            </span>,
+            onClick: () => {
+                setRenameModalOpen(true);
+            },
+        },
+        {
+            title: "Reset chat history",
+            label: <span className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
+            >
+                <ClearOutlined className="!text-[18px]" />
+            </span>,
+            onClick: handleReset,
+        },
+    ];
+
     return (
-        <nav className="flex items-center justify-between flex-wrap p-1">
-            <div className="block lg:hidden">
-                <button className="cursor-point">
-                    <TbDotsVertical color="rgb(153, 153, 153)" size={22} />
-                </button>
-            </div>
-            <div className="w-full hidden flex-grow lg:block lg:flex lg:items-center lg:w-auto">
-                <div className="text-sm lg:flex-grow text-[#888] p-1">
-                    <Popconfirm
-                        placement="bottomLeft"
-                        title={"Delete Property"}
-                        description={
-                            "Are you sure you want to delete this property?"
-                        }
-                        onConfirm={handleDelete}
-                        okText="Yes"
-                        okButtonProps={{
-                            className:
-                                "bg-red-600 hover:!bg-red-500 text-white",
-                        }}
-                        cancelText="No"
-                        icon={false}
-                    >
-                        <span
-                            title="Delete Property"
-                            className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
-                        >
-                            <AiOutlineDelete size={20} />
-                        </span>
-                    </Popconfirm>
-                    <span
-                        title="Rename Property"
-                        className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
-                        onClick={() => setRenameModalOpen(true)}
-                    >
-                        <AiOutlineEdit size={20} />
-                    </span>
-                    <Modal
-                        title="Rename Property"
-                        style={{
-                            top: "10%",
-                        }}
-                        open={renameModalOpen}
-                        onOk={handleOK}
-                        onCancel={() => setRenameModalOpen(false)}
-                        okButtonProps={{
-                            className: "bg-blue-600",
-                        }}
-                    >
-                        <Input
-                            placeholder="Input property name..."
-                            className="mt-2"
-                            onChange={handleChange}
-                            value={propertyName}
-                        />
-                    </Modal>
-                    <span
-                        title="Reset chat history"
-                        className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
-                        onClick={handleReset}
-                    >
-                        <AiOutlineClear size={20} />
-                    </span>
-                </div>
-            </div>
-        </nav>
+        <>
+            <nav className="flex items-center justify-between flex-wrap p-1">
+                <Menu mode="horizontal" className="w-full" selectable={false} items={tools} />
+                <Modal
+                    title="Rename Property"
+                    style={{
+                        top: "10%",
+                    }}
+                    open={renameModalOpen}
+                    onOk={handleOK}
+                    onCancel={() => setRenameModalOpen(false)}
+                    okButtonProps={{
+                        className: "bg-blue-600",
+                    }}
+                >
+                    <Input
+                        placeholder="Input property name..."
+                        className="mt-2"
+                        onChange={handleChange}
+                        value={propertyName}
+                    />
+                </Modal>
+            </nav>
+            <Drawer title="" placement="left" style={{ backgroundColor: '#001529', color: '#fff' }} onClose={onClose} open={open} closeIcon={<CloseOutlined style={{ color: '#fff' }} />}>
+                <SourceUploader />
+                <SideBar />
+            </Drawer>
+        </>
     );
 };
 

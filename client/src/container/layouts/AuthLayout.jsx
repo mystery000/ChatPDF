@@ -1,11 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Layout, Button, Dropdown } from 'antd';
 import { LockOutlined, UserOutlined, AreaChartOutlined, SafetyOutlined, IdcardOutlined, UnorderedListOutlined, CommentOutlined } from '@ant-design/icons';
 
-import LogoSrc from '../../assets/images/logo.png';
 import { logout } from '../../redux/auth/authSlice';
+import LogoSrc from '../../assets/images/logo.png';
+import smLogoSrc from '../../assets/images/logo-sm.png';
 
 const { Header } = Layout;
 
@@ -68,11 +69,12 @@ function AuthLayout({
 
   return (
     <Layout className='min-h-screen'>
-      <Header className='bg-white flex items-center justify-between'>
+      <Header className='bg-white flex items-center justify-between px-[20px]'>
         <div className="demo-logo h-[64px] bg-white mb-2">
-          <img src={LogoSrc} alt="logo" className='w-[200px] p-3' />
+          <Link to="/" className='hidden sm:inline' ><img src={LogoSrc} alt="logo" className='w-[200px] p-3' /></Link>
+          <Link to="/" className='inline sm:hidden'><img src={smLogoSrc} alt="logo" className='w-[64px] p-3' /></Link>
         </div>
-        <div className='w-[200px]'>
+        <div>
           <Dropdown
             menu={{
               items: items.filter(item => item.key != 'admin' || (item.key == 'admin' && user.isAdmin)),
@@ -82,7 +84,7 @@ function AuthLayout({
             placement="bottom"
             arrow
           >
-            <Button type='primary' size='large' icon={<UserOutlined />}>{user.email}</Button>
+            <Button type='primary' size='large' icon={<UserOutlined />}>{user.name}</Button>
           </Dropdown>
         </div>
       </Header>
