@@ -30,7 +30,7 @@ const UserSchema = new Schema(
             {
                 name: String,
                 sourceId: String,
-                documents: [String],
+                // documents: [String],
                 messages: [
                     {
                         text: String,
