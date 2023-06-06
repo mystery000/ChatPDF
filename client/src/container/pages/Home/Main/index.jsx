@@ -1,5 +1,8 @@
 import { useEffect } from "react";
+import classNames from 'classnames';
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+
 import { getMessages } from "../../../../redux/message/messageSlice";
 
 // components
@@ -10,6 +13,8 @@ import EmptyComponent from "./Empty";
 import MessageList from "./MessageList";
 
 const Main = () => {
+
+    const location = useLocation();
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.message.loading);
     const error = useSelector((state) => state.message.error);
@@ -17,19 +22,22 @@ const Main = () => {
     const selectedSource = useSelector((state) => state.app.selectedSource);
 
     useEffect(() => {
-        dispatch(getMessages({ sourceId: selectedSource }));
+        if (selectedSource) {
+            dispatch(getMessages({ sourceId: selectedSource }));
+        }
     }, [selectedSource]);
 
-    if (loading) return <Loader />;
+    // if (loading) return <Loader />;
 
     return (
         <div
             className="max-w-full mx-auto"
             style={{ borderTop: "1px solid #f3f3f3" }}
         >
-            <div className="bg-white flex flex-col max-h-[calc(100vh_-_70px)] h-[calc(100vh_-_70px)]">
+            <div className={classNames('bg-white flex flex-col', {'h-[calc(100vh_-_6px)]' : location.pathname == '/home', 'h-[calc(100vh_-_70px)]' : location.pathname != '/home'})}>
                 <ToolBar />
-                {messages.length > 0 ? (
+                {loading && <Loader />}
+                {(!loading && messages.length > 0) ? (
                     <MessageList messages={messages} />
                 ) : (
                     <EmptyComponent />

@@ -11,7 +11,7 @@ export default function configureAppStore(preloadedState) {
             ...getDefaultMiddleware({
                 serializableCheck: {
                     // Ignore these action types
-                    ignoredActions: ["source/uploadSource"],
+                    ignoredActions: ["source/uploadSource", "document/uploadDocument"],
                 },
             }),
             sagaMiddleware,

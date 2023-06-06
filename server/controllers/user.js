@@ -15,12 +15,29 @@ exports.getUser = async (req, res) => {
 };
 
 exports.getUsers = async (req, res) => {
-  let { page, limit } = req.query;
+  let { page, limit, name, email, utm_source, utm_campaign } = req.query;
   page = page ?? 1;
   limit = limit ?? 10;
+  name = name ?? "";
+  email = email ?? "";
+  utm_source = utm_source ?? "";
+  utm_campaign = utm_campaign ?? "";
+  let where = {};
+  if (name) {
+    where.name = new RegExp(name, "i");
+  }
+  if (email) {
+    where.email = new RegExp(email, "i");
+  }
+  if (utm_source) {
+    where.utm_source = new RegExp(utm_source, "i");
+  }
+  if (utm_campaign) {
+    where.utm_campaign = new RegExp(utm_campaign, "i");
+  }
   const skip = (page - 1) * limit;
-  const total = await User.count();
-  const users = await User.find().populate({
+  const total = await User.count(where);
+  const users = await User.find(where).populate({
     path: 'activeSubscriptionId',
     populate: 'planId',
   }).skip(skip).limit(limit);

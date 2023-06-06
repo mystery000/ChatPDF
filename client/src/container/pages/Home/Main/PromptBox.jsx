@@ -41,8 +41,10 @@ const PromptBox = () => {
     };
 
     useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
+        if(canAsk && !waiting) {
+            inputRef.current?.focus();
+        }
+    }, [canAsk, waiting]);
 
     return (
         <div className="py-3 bg-white w-full rounded-bl-xl rounded-br-xla self-center max-w-3xl px-2">

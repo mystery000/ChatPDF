@@ -34,13 +34,14 @@ exports.uploadfiles = async (req, res) => {
         if (files.length) {
             // Embedding PDF files into the Pinecone, returns id of pinecone index
             const dir = `public/files/${email}`;
+            // await emptyFolder(dir);
             const indexId = await ingest(dir, sourceId);
-
             await emptyFolder(dir);
             if (sourceId) {
                 const documents = files.map((file) => ({
                     name: file.filename,
                     sourceId: sourceId,
+                    userId: req.user._id,
                 }));
                 const docs = await Document.insertMany(documents);
                 return res.json({ documents: docs });
@@ -54,7 +55,7 @@ exports.uploadfiles = async (req, res) => {
                                 sourceId: indexId,
                                 messages: [
                                     {
-                                        text: 'Welcome, What can I help you?',
+                                        text: 'Welcome, How can I help you?',
                                         isChatOwner: false,
                                         sentBy: 'PropManager.ai',
                                     },
@@ -66,6 +67,7 @@ exports.uploadfiles = async (req, res) => {
                 const documents = files.map((file) => ({
                     name: file.filename,
                     sourceId: indexId,
+                    userId: req.user._id,
                 }));
                 const docs = await Document.insertMany(documents);
                 return res.json({ sourceId: indexId, name: sourceName, documents: docs });
@@ -237,20 +239,42 @@ exports.chat = async (req, res) => {
         return res.status(500).json({ error: 'Something went wrong' });
     }
 };
+
 /*
     GET http://localhost:5000/apis/sources/documents HTTP/1.1
+
+    Authorization: Bearer
+
+    Get all uploaded documents 
+    Return Type: Array
+*/
+exports.getAllDocuments = async (req, res) => {
+    try {
+        const documents = await Document.find({userId: req.user._id});
+        res.status(200).send({ documents });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: 'Failed',
+            data: {
+                error: error.message,
+            },
+        });
+    }
+};
+
+/*
+    GET http://localhost:5000/apis/sources/documents/:sourceId HTTP/1.1
 
     Authorization: Bearer
 
     Get all uploaded documents in specific source
     Return Type: Array
 */
-
 exports.getDocumentsFromSource = async (req, res) => {
     try {
-        const { email } = req.user;
-        const documents = await Document.find({ email })
-        console.log(documents)
+        const documents = await Document.find({ sourceId: req.params.sourceId });
+
         res.status(200).send({ documents });
     } catch (error) {
         console.log(error);

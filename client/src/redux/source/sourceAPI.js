@@ -46,10 +46,8 @@ function* uploadSourceAPI(action) {
             postRequestWithFiles("sources/upload", action.payload)
         );
         yield put(uploadDocumentSucess(response.data));
-        if(response.data?.sourceId) {
-            yield put(setSelectedSource(response.data));
-            yield put(uploadSourceSuccess(response.data));
-        }
+        yield put(setSelectedSource(response.data));
+        yield put(uploadSourceSuccess(response.data));
     } catch (error) {
         yield put(
             uploadSourceFailure({

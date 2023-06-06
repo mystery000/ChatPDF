@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FormData from "form-data";
 import { InboxOutlined } from "@ant-design/icons";
-import { Form, Input, Modal, Progress, Upload, message } from "antd";
-import { uploadSource } from "../../../../redux/source/sourceSlice";
+import { Form, Modal, Upload} from "antd";
+import { uploadDocument } from "../../../../redux/document/documentSlice";
 
 const DocumentUploadModal = ({ open, onClose }) => {
     const [form] = Form.useForm();
     const [sources, setSources] = useState([]);
     const dispatch = useDispatch();
 
-    const uploading = useSelector((state) => state.source.uploading);
+    const uploading = useSelector((state) => state.document.loading);
     const selectedSource = useSelector((state) => state.app.selectedSource);
     const uploadingError = useSelector((state) => state.source.uploadingError);
 
@@ -31,7 +31,7 @@ const DocumentUploadModal = ({ open, onClose }) => {
                         fileList.forEach(({ originFileObj }) => {
                             formData.append("files", originFileObj);
                         });
-                        dispatch(uploadSource(formData));
+                        dispatch(uploadDocument(formData));
                         form.resetFields();
                         setSources([]);
                         onClose();
@@ -40,7 +40,7 @@ const DocumentUploadModal = ({ open, onClose }) => {
                         console.log("Validate Failed:", info);
                     });
             }}
-            okButtonProps={{ loading: uploading }}
+            okButtonProps={{ loading: !!uploading }}
         >
             <Form form={form} layout="vertical">
                 <Form.Item name="dragger" label="dragger" noStyle>

@@ -8,9 +8,8 @@ Follow Up Input: {question}
 
 Standalone question:`;
 
-const QA_PROMPT = `Act as a helpful PDF file. Given the following pages of the PDF as information source, answer any questions the user asks. If the given pages contain the answer, generate a concise answer from these pages of the PDF as information source. Otherwise, mention that the source does not contain relevant information, but still answer the question to the best of your knowledge. Act as if you are the PDF file and chat with the human, imitate the linguistic style of the PDF.
-You must provide as much detail as possible based on your knowledge and the following context.
-When a user sends a greeting, he should respond as if he were an old friend.
+const QA_PROMPT = `Act as a helpful PDF file. Given the following pages of the PDF as information source, answer any questions the user asks. If the given pages contain the answer, generate a concise answer from these pages of the PDF as information source. Otherwise, mention that the source does not contain relevant information, but still answer the question to the best of your knowledge. Act as if you are the PDF file and chat with the human, imitate the linguistic style of the PDF. Please use formatting in your answer, 
+and provide as much detail as possible based on your knowledge and the following context:
 
 Context: {context}
 
@@ -19,7 +18,7 @@ Question: {question}
 Answer: `;
 const makeChain = (vectorstore) => {
     const model = new OpenAI({
-        temperature: 0.1, // increase temepreature to get more creative answers
+        temperature: 0.75, // increase temepreature to get more creative answers
         modelName: 'gpt-3.5-turbo', //change this to gpt-4 if you have access
     });
 

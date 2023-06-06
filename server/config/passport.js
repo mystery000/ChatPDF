@@ -16,7 +16,7 @@ const jwtLogin = new localStrategy(
     loginOptions,
     async (email, password, done) => {
         try {
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email: new RegExp(email, 'i') });
 
             if (!user) {
                 return done(null, false, { message: "User not found" });

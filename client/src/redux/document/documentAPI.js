@@ -4,9 +4,12 @@ import {
     getDocuments,
     getDocumentsSuccess,
     getDocumentsFailure,
+    uploadDocument,
+    uploadDocumentSucess,
+    uploadDocumentFailure,
 } from "./documentSlice";
 
-import { getRequest } from "../../services/axiosClient";
+import { getRequest, postRequestWithFiles } from "../../services/axiosClient";
 
 function* getDocumentsAPI(action) {
     try {
@@ -23,6 +26,23 @@ function* getDocumentsAPI(action) {
     }
 }
 
+function* uploadDocumentAPI(action) {
+    try {
+        const response = yield call(() =>
+            postRequestWithFiles("sources/upload", action.payload)
+        );
+        yield put(uploadDocumentSucess(response.data));
+    } catch (error) {
+        yield put(
+            uploadDocumentFailure({
+                error: {
+                    message: `Failed to upload files due to ${error?.message}`,
+                },
+            })
+        );
+    }
+}
+
 export default function* rootSaga() {
-    yield all([takeLatest(getDocuments, getDocumentsAPI)]);
+    yield all([takeLatest(getDocuments, getDocumentsAPI), takeLatest(uploadDocument, uploadDocumentAPI)]);
 }

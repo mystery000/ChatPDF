@@ -1,18 +1,21 @@
 import { useState } from "react";
-import { MenuUnfoldOutlined, DeleteOutlined, EditOutlined, ClearOutlined, CloseOutlined } from "@ant-design/icons";
-import { Drawer, Input, Menu, Modal, Popconfirm } from "antd";
+import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Drawer, Input, Menu, Modal, Popconfirm } from "antd";
+import { MenuUnfoldOutlined, DeleteOutlined, EditOutlined, ClearOutlined, CloseOutlined } from "@ant-design/icons";
+
 import {
     deleteSource,
     renameSource,
 } from "../../../../redux/source/sourceSlice";
-
+import UserMenu from "../../../layouts/partials/UserMenu";
+import SideBar from "../SideBar";
 import { deleteMessages } from "../../../../redux/message/messageSlice";
 import SourceUploader from "../Modals/SourceUploader";
-import SideBar from "../SideBar";
 
 const ToolBar = () => {
 
+    const location = useLocation();
     const dispatch = useDispatch();
     const deleting = useSelector((state) => state.source.deleting);
     const renaming = useSelector((state) => state.source.renaming);
@@ -106,29 +109,32 @@ const ToolBar = () => {
 
     return (
         <>
-            <nav className="flex items-center justify-between flex-wrap p-1">
-                <Menu mode="horizontal" className="w-full" selectable={false} items={tools} />
-                <Modal
-                    title="Rename Property"
-                    style={{
-                        top: "10%",
-                    }}
-                    open={renameModalOpen}
-                    onOk={handleOK}
-                    onCancel={() => setRenameModalOpen(false)}
-                    okButtonProps={{
-                        className: "bg-blue-600",
-                    }}
-                >
-                    <Input
-                        placeholder="Input property name..."
-                        className="mt-2"
-                        onChange={handleChange}
-                        value={propertyName}
-                    />
-                </Modal>
+            <nav className="flex items-center justify-between flex-wrap p-1 shadow">
+                <Menu mode="horizontal" className="w-1/2 border-0" selectable={false} items={tools} />
+                <div className="w-1/2 flex justify-end pr-2">
+                    {location.pathname == '/home' && <UserMenu />}
+                </div>
             </nav>
-            <Drawer title="" placement="left" style={{ backgroundColor: '#001529', color: '#fff' }} onClose={onClose} open={open} closeIcon={<CloseOutlined style={{ color: '#fff' }} />}>
+            <Modal
+                title="Rename Property"
+                style={{
+                    top: "10%",
+                }}
+                open={renameModalOpen}
+                onOk={handleOK}
+                onCancel={() => setRenameModalOpen(false)}
+                okButtonProps={{
+                    className: "bg-blue-600",
+                }}
+            >
+                <Input
+                    placeholder="Input property name..."
+                    className="mt-2"
+                    onChange={handleChange}
+                    value={propertyName}
+                />
+            </Modal>
+            <Drawer title="" width={250} placement="left" style={{ backgroundColor: '#001529', color: '#fff' }} bodyStyle={{ padding: 0 }} onClose={onClose} open={open} closeIcon={<CloseOutlined style={{ color: '#fff' }} />}>
                 <SourceUploader />
                 <SideBar />
             </Drawer>

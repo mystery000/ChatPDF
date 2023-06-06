@@ -1,13 +1,13 @@
 const path = require('path');
-const fsPromises = require('fs/promises');
+const fs = require('fs');
 
 const emptyFolder = async (folderPath) => {
     try {
-        // Find all files in the folder
-        const files = await fsPromises.readdir(folderPath);
-        for (const file of files) {
-            await fsPromises.unlink(path.resolve(folderPath, file));
-            console.log(`${folderPath}/${file} has been removed successfully`);
+        if(fs.existsSync(path.resolve(folderPath))) {
+            fs.rmSync(path.resolve(folderPath), { recursive: true, force: true });
+            console.log(`'${folderPath}' has been removed successfully!`);
+        } else {
+            console.log(`'${folderPath}' does not exist!`);
         }
     } catch (err) {
         console.log(err);
