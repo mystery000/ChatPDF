@@ -7,7 +7,7 @@ const { Content, Sider } = Layout;
 
 function Home() {
     return (
-        <Layout hasSider>
+        <>
             <Sider
                 theme={"dark"}
                 width={250}
@@ -24,12 +24,12 @@ function Home() {
                 <SourceUploader />
                 <SideBar />
             </Sider>
-            <Layout className="sm:ml-[250px]">
+            <Layout className="sm:ml-[250px] max-h-screen">
                 <Content>
                     <Main />
                 </Content>
             </Layout>
-        </Layout>
+        </>
     );
 }
 
