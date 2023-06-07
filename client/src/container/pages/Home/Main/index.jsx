@@ -31,7 +31,7 @@ const Main = () => {
 
     return (
         <div
-            className="max-w-full mx-auto overflow-hidden"
+            className="max-w-full mx-auto"
         >
             <div className={classNames('bg-white', {'h-screen' : location.pathname == '/home' })}>
                 <ToolBar />
