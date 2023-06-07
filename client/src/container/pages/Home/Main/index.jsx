@@ -31,10 +31,9 @@ const Main = () => {
 
     return (
         <div
-            className="max-w-full mx-auto"
-            style={{ borderTop: "1px solid #f3f3f3" }}
+            className="max-w-full mx-auto overflow-hidden"
         >
-            <div className={classNames('bg-white flex flex-col', {'h-[calc(100vh_-_6px)]' : location.pathname == '/home', 'h-[calc(100vh_-_70px)]' : location.pathname != '/home'})}>
+            <div className={classNames('bg-white', {'h-screen' : location.pathname == '/home', 'flex flex-col h-[calc(100vh_-_70px)]' : location.pathname != '/home'})}>
                 <ToolBar />
                 {loading && <Loader />}
                 {(!loading && messages.length > 0) ? (
