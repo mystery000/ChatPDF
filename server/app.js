@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cors = require('cors');
-const config = require('./config');
+const path = require('path');
 const http = require('http');
+
+const config = require('./config');
 const socketIO = require('./scripts/socketio');
 const webhook = require('./controllers/webhook');
 const api = require('./routes');
@@ -22,8 +24,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.static(`${__dirname}/public`));
-app.use('/apis', api);
-app.post('/stripe/webhook', express.raw({type: '*/*'}), webhook.index);
+app.use('/api', api);
+app.post('/stripe/webhook', express.raw({ type: '*/*' }), webhook.index);
+app.get('/*', function (req, res) {
+    res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
 
 // Handle errors.
 app.use(function (err, req, res, next) {

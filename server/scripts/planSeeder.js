@@ -22,7 +22,7 @@ async function run() {
       slug: 'Pro',
       stripe_plan: 'price_1NDYsVIhTKltFnGqD4Sb3Iuj',
       price: 250,
-      services: ['5 Property', '5 Document', '250 Questions', '2 Account'],
+      services: ['5 Property', '5 Document / Property', '250 Questions / Month', '2 Account'],
       description: 'For landlords managing betwen 1-5 properties.'
     },
     {
@@ -30,7 +30,7 @@ async function run() {
       slug: 'Professional',
       stripe_plan: 'price_1NDYtvIhTKltFnGqrbxdaWvs',
       price: 1000,
-      services: ['25 Property', '10 Document', 'Unlimited Questions', '5 Account'],
+      services: ['25 Property', '10 Document / Property', 'Unlimited Questions', '5 Account'],
       description: 'For landlords managing a large portfolio of properties.'
     },
     {
@@ -38,7 +38,7 @@ async function run() {
       slug: 'Commercial',
       stripe_plan: 'price_1NDYulIhTKltFnGqIyHOFKtg',
       price: 2500,
-      services: ['50 Property', '25 Document', 'Unlimited Questions', '10 Account'],
+      services: ['50 Property', '25 Document / Property', 'Unlimited Questions', '10 Account'],
       description: 'For management companies and large family offices.'
     },
   ];

@@ -8,11 +8,12 @@ import Message from "./Message";
 const MessageList = ({ messages }) => {
     const messageListRef = useRef(null);
     const waiting = useSelector((state) => state.message.waiting);
+    const user = useSelector((state) => state.auth.user);
     const [open, setOpen] = useState(false);
     const [selMessageSource, setSelMessageSource] = useState([]);
 
     const showDrawer = (message) => {
-        console.log(message)
+        if(!user.isAdmin) return;
         setSelMessageSource(message.sourceDocuments);
         setOpen(true);
     };

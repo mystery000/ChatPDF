@@ -3,7 +3,7 @@ const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
 const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
 const { PineconeStore } = require('langchain/vectorstores/pinecone');
 const { DirectoryLoader } = require('langchain/document_loaders/fs/directory');
-const { PDFLoader } = require('langchain/document_loaders');
+const { PDFLoader } = require('langchain/document_loaders/fs/pdf');
 const { TextLoader } = require('langchain/document_loaders/fs/text');
 const { initPinecone } = require('../utils/pinecone-client');
 const { PINECONE_INDEX_NAME } = require('../config');
@@ -18,7 +18,7 @@ const ingest = async (dir, indexId) => {
         });
 
         const rawDocs = await directoryLoader.load();
-
+        // console.log(rawDocs);
         /* Split text into chunks */
         const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 600,
