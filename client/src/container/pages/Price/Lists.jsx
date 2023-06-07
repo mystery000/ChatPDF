@@ -38,17 +38,17 @@ function Lists() {
 
   return (
     <div className='container mx-auto my-4'>
-      <Row align='stretch' gutter={[16, 16]}>
+      <Row align='stretch' justify='center' gutter={[16, 16]}>
         <Col span={24}>
-          <Title level={3} className='text-center mt-5'>
+          <Title level={3} className='text-center mt-5 m-4'>
             Find the perfect plan for your team, or try it for free!
           </Title>
         </Col>
         {plans.map(({
           _id, name, slug, description, price, services
         }) => (
-          <Col span={6} key={_id}>
-            <Card className='shadow-lg h-full'>
+          <Col span={22} md={12} lg={6}  key={_id} className='!p-2'>
+            <Card className='shadow-lg w-full h-full'>
               <div className="flex flex-col justify-between">
                 <div>
                   <Title level={4}>

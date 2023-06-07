@@ -33,7 +33,7 @@ const Main = () => {
         <div
             className="max-w-full mx-auto overflow-hidden"
         >
-            <div className={classNames('bg-white', {'h-screen' : location.pathname == '/home', 'flex flex-col h-[calc(100vh_-_70px)]' : location.pathname != '/home'})}>
+            <div className={classNames('bg-white', {'h-screen' : location.pathname == '/home' })}>
                 <ToolBar />
                 {loading && <Loader />}
                 {(!loading && messages.length > 0) ? (

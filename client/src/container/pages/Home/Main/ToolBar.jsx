@@ -109,12 +109,12 @@ const ToolBar = () => {
 
     return (
         <>
-            <nav className="flex items-center justify-between flex-wrap p-1 shadow">
+            <div className="flex items-center justify-between flex-wrap p-1 shadow">
                 <Menu mode="horizontal" className="w-1/2 border-0" selectable={false} items={tools} />
                 <div className="w-1/2 flex justify-end pr-2">
                     {location.pathname == '/home' && <UserMenu />}
                 </div>
-            </nav>
+            </div>
             <Modal
                 title="Rename Property"
                 style={{
