@@ -29,7 +29,7 @@ const MessageList = ({ messages }) => {
 
     return (
         <>
-            <div className="flex flex-1 w-full overflow-auto justify-center mt-1 h-[calc(100vh_-_120px)]">
+            <div className="flex flex-1 w-full overflow-auto justify-center mt-1 h-[calc(100vh_-_220px)]">
                 <div className="w-full max-w-3xl">
                     {messages.map((message, index) => (
                         <Message
