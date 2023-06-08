@@ -33,7 +33,7 @@ const Main = () => {
         <div
             className="max-w-full mx-auto"
         >
-            <div className={classNames('bg-white', {'h-screen' : location.pathname == '/home' })}>
+            <div className={classNames('bg-white', {'h-full' : location.pathname == '/home' })}>
                 <ToolBar />
                 <div className="w-full h-[54px]"></div>
                 {loading && <Loader />}

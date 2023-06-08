@@ -24,7 +24,7 @@ function Home() {
                 <SourceUploader />
                 <SideBar />
             </Sider>
-            <Layout className="sm:ml-[250px] max-h-screen">
+            <Layout className="sm:ml-[250px] h-screen">
                 <Content>
                     <Main />
                 </Content>
