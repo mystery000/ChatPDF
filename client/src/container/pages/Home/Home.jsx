@@ -11,7 +11,7 @@ function Home() {
             <Sider
                 theme={"dark"}
                 width={250}
-                className="hidden sm:block"
+                className="hidden sm:block z-50"
                 style={{
                     overflow: 'auto',
                     height: '100vh',

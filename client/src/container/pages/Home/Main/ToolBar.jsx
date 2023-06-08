@@ -109,7 +109,7 @@ const ToolBar = () => {
 
     return (
         <>
-            <div className="flex items-center justify-between flex-wrap p-1 shadow">
+            <div className="w-full absolute flex items-center justify-between flex-wrap p-1 shadow left-0 sm:pl-[250px] bg-white">
                 <Menu mode="horizontal" className="w-1/2 border-0" selectable={false} items={tools} />
                 <div className="w-1/2 flex justify-end pr-2">
                     {location.pathname == '/home' && <UserMenu />}

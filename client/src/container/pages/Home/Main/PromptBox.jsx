@@ -41,35 +41,37 @@ const PromptBox = () => {
     };
 
     useEffect(() => {
-        if(canAsk && !waiting) {
+        if (canAsk && !waiting) {
             inputRef.current?.focus();
         }
     }, [canAsk, waiting]);
 
     return (
-        <div className="py-3 bg-white w-full mx-auto max-w-3xl px-2">
-            <Space.Compact style={{ width: "100%" }} size="large">
-                <Input
-                    allowClear
-                    placeholder={
-                        waiting
-                            ? "Waiting for response..."
-                            : "Ask any question."
-                    }
-                    onKeyDown={handleEnter}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    ref={inputRef}
-                    disabled={!canAsk || waiting}
-                />
-                <Button 
-                    type='primary' 
-                    icon={<SendOutlined />}
-                    onClick={handleClick}
-                    disabled={!canAsk || waiting}
-                >
-                </Button>
-            </Space.Compact>
+        <div className="pb-3 bg-white w-full px-2 absolute bottom-0 left-0 sm:pl-[250px]">
+            <div className="max-w-3xl pl-2 mx-auto">
+                <Space.Compact style={{ width: "100%" }} size="large">
+                    <Input
+                        allowClear
+                        placeholder={
+                            waiting
+                                ? "Waiting for response..."
+                                : "Ask any question."
+                        }
+                        onKeyDown={handleEnter}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        ref={inputRef}
+                        disabled={!canAsk || waiting}
+                    />
+                    <Button
+                        type='primary'
+                        icon={<SendOutlined />}
+                        onClick={handleClick}
+                        disabled={!canAsk || waiting}
+                    >
+                    </Button>
+                </Space.Compact>
+            </div>
         </div>
     );
 };
