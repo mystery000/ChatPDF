@@ -35,7 +35,7 @@ const Main = () => {
         >
             <div className={classNames('bg-white', {'h-full' : location.pathname == '/home' })}>
                 <ToolBar />
-                <div className="w-full h-[54px]"></div>
+                {/* <div className="w-full h-[54px]"></div> */}
                 {loading && <Loader />}
                 {(!loading && messages.length > 0) ? (
                     <MessageList messages={messages} />
