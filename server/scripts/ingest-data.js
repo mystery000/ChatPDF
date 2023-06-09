@@ -21,8 +21,9 @@ const ingest = async (dir, indexId) => {
         // console.log(rawDocs);
         /* Split text into chunks */
         const textSplitter = new RecursiveCharacterTextSplitter({
-            chunkSize: 600,
+            chunkSize: 1000,
             chunkOverlap: 200,
+            keepSeparator: true,
         });
 
         const docs = await textSplitter.splitDocuments(rawDocs);
