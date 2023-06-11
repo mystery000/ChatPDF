@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../utils/uploader');
-const emptyFolderMiddleware = require('../middlewares/emptyFolder');
+const upload = require('../middlewares/upload');
+// const emptyFolderMiddleware = require('../middlewares/emptyFolder');
 const upload_max_count = 10;
 const sourceController = require('../controllers/source');
 
 router.post(
-    '/upload',
-    [emptyFolderMiddleware.empty,
-    upload.array('files', upload_max_count)],
-    sourceController.uploadfiles,
+    '/addSource',
+    sourceController.addSource,
 );
+router.post('/uploadFile', upload, sourceController.uploadFile);
+router.post('/deleteFile', sourceController.deleteFile);
 router.get('/', sourceController.getSources);
 router.put('/:sourceId', sourceController.renameSource);
 router.get('/documents', sourceController.getAllDocuments);

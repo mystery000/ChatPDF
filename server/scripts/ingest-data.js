@@ -8,16 +8,23 @@ const { TextLoader } = require('langchain/document_loaders/fs/text');
 const { initPinecone } = require('../utils/pinecone-client');
 const { PINECONE_INDEX_NAME } = require('../config');
 
-const ingest = async (dir, indexId) => {
+const ingest = async (fileList, indexId) => {
     try {
         const pinecone = await initPinecone();
         /*load raw docs from the all files in the directory */
-        const directoryLoader = new DirectoryLoader(dir, {
-            '.pdf': (path) => new PDFLoader(path, { splitPages: true }),
-            '.txt': (path) => new TextLoader(path),
-        });
+        let rawDocs = [];
+        // const directoryLoader = new DirectoryLoader(dir, {
+        //     '.pdf': (path) => new PDFLoader(path, { splitPages: true }),
+        //     '.txt': (path) => new TextLoader(path),
+        // });
 
-        const rawDocs = await directoryLoader.load();
+        for (const file of fileList) {
+            let pdfLoad = new PDFLoader(file.path, { splitPages: true });
+            const pdfDocs = await pdfLoad.load();
+            rawDocs = [...rawDocs, ...pdfDocs];
+        }
+
+        // const rawDocs = await directoryLoader.load();
         // console.log(rawDocs);
         /* Split text into chunks */
         const textSplitter = new RecursiveCharacterTextSplitter({

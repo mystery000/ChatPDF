@@ -1,12 +1,9 @@
 const User = require('../models/user');
 const Document = require('../models/document');
-const emptyFolder = require('../utils/emptyFolder');
 const { ingest } = require('../scripts/ingest-data');
 const { initPinecone } = require('../utils/pinecone-client');
 const { PINECONE_INDEX_NAME } = require('../config');
-const { OpenAIEmbeddings } = require('langchain/embeddings/openai');
-const { PineconeStore } = require('langchain/vectorstores/pinecone');
-const { makeChain } = require('../utils/makechain');
+const { deleteFile, chat } = require('../utils/helpers');
 
 /*
     POST http://localhost:5000/apis/sources/upload HTTP/1.1
@@ -24,28 +21,28 @@ const { makeChain } = require('../utils/makechain');
     return documents when append documents to the source
 */
 
-exports.uploadfiles = async (req, res) => {
+exports.addSource = async (req, res) => {
     try {
-        const files = req.files;
+        const files = req.body.fileList;
         const sourceId = req.body.sourceId;
-        const sourceName = req.body.sourceName || 'Untitled';
-        const { email } = req.user;
+        const sourceName = req.body.sourceName || `Untitled_${Date.now()}`;
 
         if (files.length) {
             // Embedding PDF files into the Pinecone, returns id of pinecone index
-            const dir = `public/files/${email}`;
             // await emptyFolder(dir);
-            const indexId = await ingest(dir, sourceId);
-            await emptyFolder(dir);
+            const indexId = await ingest(files, sourceId);
+
             if (sourceId) {
                 const documents = files.map((file) => ({
                     name: file.filename,
+                    path: file.path,
                     sourceId: sourceId,
                     userId: req.user._id,
                 }));
                 const docs = await Document.insertMany(documents);
                 return res.json({ documents: docs });
             } else {
+                const [msgUser, msgLangchain] = await chat('please summarize this document', indexId, req.user);
                 await User.findOneAndUpdate(
                     { _id: req.user._id },
                     {
@@ -55,9 +52,8 @@ exports.uploadfiles = async (req, res) => {
                                 sourceId: indexId,
                                 messages: [
                                     {
-                                        text: 'Welcome, How can I help you?',
-                                        isChatOwner: false,
-                                        sentBy: 'PropManager.ai',
+                                        ...msgLangchain,
+                                        text: msgLangchain.text + '\n\n What else would you like to know?',
                                     },
                                 ],
                             },
@@ -66,6 +62,7 @@ exports.uploadfiles = async (req, res) => {
                 );
                 const documents = files.map((file) => ({
                     name: file.filename,
+                    path: file.path,
                     sourceId: indexId,
                     userId: req.user._id,
                 }));
@@ -79,6 +76,17 @@ exports.uploadfiles = async (req, res) => {
         res.json({ error: err });
     }
 };
+
+exports.uploadFile = async (req, res) => {
+    const file = req.file;
+    return res.json({path: file.path.replace(/\\/g, "/"), filename: file.originalname});
+}
+
+exports.deleteFile = async (req, res) => { 
+    const path = req.body.path;
+    deleteFile(path);
+    return res.json({ success: true });
+}
 /*
     DELETE http://localhost:5000/apis/sources/:sourceId HTTP/1.1
 
@@ -173,57 +181,8 @@ exports.getMessagesFromSource = async (req, res) => {
 exports.chat = async (req, res) => {
     const sourceId = req.params.sourceId;
     const { question } = req.body;
-    // OpenAI recommends replacing newlines with spaces for best results
-    const sanitizedQuestion = question.trim().replaceAll('\n', ' ');
-
     try {
-        const pinecone = await initPinecone();
-        const index = pinecone.Index(PINECONE_INDEX_NAME);
-
-        /* create vectorstore*/
-        const vectorStore = await PineconeStore.fromExistingIndex(
-            new OpenAIEmbeddings(),
-            {
-                pineconeIndex: index,
-                textKey: 'text',
-                namespace: sourceId, //namespace comes from request parameters
-            },
-        );
-
-        //create chain
-        const chain = makeChain(vectorStore);
-
-        const data = await User.findOne(
-            {
-                _id: req.user._id,
-                'sources.sourceId': sourceId,
-            },
-            'sources.messages.$',
-        );
-        const messages = data.sources[0].messages;
-        chat_history = messages.map((message) => message.text);
-        chat_history.push(sanitizedQuestion);
-
-        //Ask a question using chat history
-        const response = await chain.call({
-            question: sanitizedQuestion,
-            chat_history: [] || chat_history,
-        });
-
-        const { text, sourceDocuments } = response;
-        const msgUser = {
-            sentAt: new Date(),
-            sentBy: req.user.username,
-            isChatOwner: true,
-            text: question,
-        };
-        const msgLangchain = {
-            sentAt: new Date(),
-            sentBy: 'PropManager.ai',
-            isChatOwner: false,
-            text: text,
-            sourceDocuments: sourceDocuments,
-        };
+        const [msgUser, msgLangchain] = await chat(question, sourceId, req.user);
 
         await User.findOneAndUpdate(
             { _id: req.user._id, 'sources.sourceId': sourceId },

@@ -16,6 +16,9 @@ const documentSchema = new Schema(
             type: String,
             required: true,
         },
+        path: {
+            type: String,
+        }
     },
     {
         timestamps: true,
