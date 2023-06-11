@@ -15,7 +15,7 @@ const Message = ({ message, isLast, onClick }) => {
 
     return (
         <div
-            className={`px-2 py-2 flex flex-row w-full ${isChatOwner ? "justify-end" : "justify-start"
+            className={`px-2 py-2 flex w-full ${isChatOwner ? "justify-end flex-row" : "flex-col-reverse justify-start flex-wrap"
                 }`}
         >
             <div
@@ -28,18 +28,18 @@ const Message = ({ message, isLast, onClick }) => {
                 <div className={classNames({ 'cursor-pointer': !isChatOwner })} onClick={() => isChatOwner ? null : onClick()}>
                     {streamMode ? <TypingMessage className="whitespace-pre-wrap" message={text} /> : text}
                 </div>
-                {!isChatOwner && <div className='mt-2 flex justify-end'><Link
-                    to='#'
-                    onClick={(e) => {
-                        window.location.href = `mailto:${user.email}?subject=${'Landlordgenius.AI'}&body=${text}`;
-                        e.preventDefault();
-                    }}
-                >
-                    <Button className='mr-2' type='primary' icon={<MailOutlined />}>Email</Button>
-                </Link> <CopyToClipboard text={text} onCopy={() => {
-                    toast.info('This text is copied!')
-                }}><Button type='primary' icon={<CopyOutlined />}>Copy</Button></CopyToClipboard></div>}
             </div>
+            {!isChatOwner && <div className='mt-2 flex'><Link
+                to='#'
+                onClick={(e) => {
+                    window.location.href = `mailto:${user.email}?subject=${'Landlordgenius.AI'}&body=${text}`;
+                    e.preventDefault();
+                }}
+            >
+                <Button className='mr-2' type='primary' icon={<MailOutlined />}>Email</Button>
+            </Link> <CopyToClipboard text={text} onCopy={() => {
+                toast.info('This text is copied!')
+            }}><Button type='primary' icon={<CopyOutlined />}>Copy</Button></CopyToClipboard></div>}
         </div>
     );
 };
