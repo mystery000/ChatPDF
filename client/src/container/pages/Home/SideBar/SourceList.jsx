@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Menu, Spin, message, Dropdown, Popconfirm, Form, Modal, Input } from "antd";
+import { Menu, Spin, message, Dropdown, Popconfirm, Form, Modal, Input, Pagination } from "antd";
 import { FilePdfOutlined, PlusOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { BsChatLeftDots, BsThreeDotsVertical } from "react-icons/bs";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -59,7 +59,9 @@ const SourceList = () => {
         },
         {
             key: '3',
-            label: <span onClick={() => setOpenPDFModal(true)}><EyeOutlined /> View</span>,
+            label: <span onClick={() => {
+                window.open(selectedDocument.path.replace('public/', ''));
+            }}><EyeOutlined /> View</span>,
         },
     ];
 
@@ -163,22 +165,25 @@ const SourceList = () => {
                     </Form.Item>
                 </Form>
             </Modal>
-            <Modal
+            {/* <Modal
                 width={650}
                 open={openPDFModal}
                 title={selectedDocument.name}
                 onCancel={() => setOpenPDFModal(false)}
-                footer={[]}
+                footer={[<Pagination
+                    total={numPages}
+                    showQuickJumper
+                    defaultPageSize={1}
+                    showTotal={(total) => `${pageNumber}/${total}`}
+                    onChange={page => setPageNumber(page)}
+                />]}
             >
                 <div className="w-full">
-                    {selectedDocument.path && <Document file={`http://localhost/files/${selectedDocument.path.replace('public/', '')}`} onLoadSuccess={onDocumentLoadSuccess}>
-                        <Page pageNumber={1} />
+                    {selectedDocument.path && <Document file={`${selectedDocument.path.replace('public/', '')}`} onLoadSuccess={onDocumentLoadSuccess}>
+                        <Page pageNumber={pageNumber} renderTextLayer={false} width={600} renderAnnotationLayer={false} />
                     </Document>}
-                    <p>
-                        Page {pageNumber} of {numPages}
-                    </p>
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     );
 };

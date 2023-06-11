@@ -18,6 +18,12 @@ const documentSchema = new Schema(
         },
         path: {
             type: String,
+        },
+        indexKey: {
+            type: String,
+        },
+        size: {
+            type: Number,
         }
     },
     {

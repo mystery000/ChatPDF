@@ -10,22 +10,15 @@ const { PINECONE_INDEX_NAME } = require('../config');
 
 const ingest = async (fileList, indexId) => {
     try {
-        const pinecone = await initPinecone();
-        /*load raw docs from the all files in the directory */
-        let rawDocs = [];
-        // const directoryLoader = new DirectoryLoader(dir, {
-        //     '.pdf': (path) => new PDFLoader(path, { splitPages: true }),
-        //     '.txt': (path) => new TextLoader(path),
-        // });
+        const embeddings = new OpenAIEmbeddings();
+        //change to your own index name
+        const PINECONE_NAME_SPACE = indexId || v4();
+        const pineCone = new PineconeStore(embeddings, {
+            pineconeIndex: global.index,
+            namespace: PINECONE_NAME_SPACE,
+            textKey: 'text',
+        });
 
-        for (const file of fileList) {
-            let pdfLoad = new PDFLoader(file.path, { splitPages: true });
-            const pdfDocs = await pdfLoad.load();
-            rawDocs = [...rawDocs, ...pdfDocs];
-        }
-
-        // const rawDocs = await directoryLoader.load();
-        // console.log(rawDocs);
         /* Split text into chunks */
         const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 1000,
@@ -33,23 +26,22 @@ const ingest = async (fileList, indexId) => {
             keepSeparator: true,
         });
 
-        const docs = await textSplitter.splitDocuments(rawDocs);
         console.log('Creating vector store...');
-        /*create and store the embeddings in the vectorStore*/
-        const embeddings = new OpenAIEmbeddings();
-        const index = pinecone.Index(PINECONE_INDEX_NAME); //change to your own index name
+        let data = [];
+        for (const file of fileList) {
+            const indexKey = v4();
+            let pdfLoad = new PDFLoader(file.path, { splitPages: true });
+            const pdfDocs = await pdfLoad.load();
+            let docs = await textSplitter.splitDocuments(pdfDocs);
+            /*create and store the embeddings in the vectorStore*/
+            let ids = docs.map((doc, ind) => (indexKey + '_' + ind));
+            data.push({ ...file, indexKey, size: docs.length});
+            await pineCone.addDocuments(docs, ids);
+            // rawDocs = [...rawDocs, ...pdfDocs];
+        }
+        console.log('Created vector store!');
 
-        //embed the PDF documents
-
-        const PINECONE_NAME_SPACE = indexId || v4();
-
-        await PineconeStore.fromDocuments(docs, embeddings, {
-            pineconeIndex: index,
-            namespace: PINECONE_NAME_SPACE,
-            textKey: 'text',
-        });
-        console.log('Created vector store successfully!');
-        return PINECONE_NAME_SPACE;
+        return [PINECONE_NAME_SPACE, data];
     } catch (error) {
         console.log('error', error);
         throw new Error('Failed to ingest your data');

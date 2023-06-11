@@ -1,9 +1,16 @@
+const _ = require('lodash');
 const Document = require('../models/document');
 
 exports.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    await Document.findByIdAndDelete(id);
+    let doc = await Document.findById(id);
+    let allIds = new Array(doc.size).fill(0).map((_, ind) => (doc.indexKey + '_' + ind));
+    const splitIds = _.chunk(allIds, 1000);
+    for (const ids of splitIds) {
+      await global.index.delete1({ids, namespace: doc.sourceId});
+    }
+    await doc.delete();
     return res.json({ success: true });
   } catch (error) {
     console.log('document delete error', error);

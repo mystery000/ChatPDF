@@ -9,6 +9,7 @@ const config = require('./config');
 const socketIO = require('./scripts/socketio');
 const webhook = require('./controllers/webhook');
 const api = require('./routes');
+const { createIndex } = require('./utils/helpers');
 
 mongoose
     .connect(config.MongoURL)
@@ -38,6 +39,8 @@ app.use(function (err, req, res, next) {
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
-    console.log(`Server started on port : ${PORT}.`);
+server.listen(PORT, async () => {
+    const index = await createIndex();
+    global.index = index;
+    console.log(`Server is running on port : ${PORT}`);
 });

@@ -18,7 +18,7 @@ Question: {question}
 Answer: `;
 const makeChain = (vectorstore) => {
     const model = new OpenAI({
-        temperature: 0.7, // increase temepreature to get more creative answers
+        temperature: 0.9, // increase temepreature to get more creative answers
         modelName: 'gpt-4', //change this to gpt-4 if you have access
         // modelName: 'gpt-3.5-turbo', //change this to gpt-4 if you have access
     });

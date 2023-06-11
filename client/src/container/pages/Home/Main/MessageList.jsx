@@ -8,6 +8,7 @@ import Message from "./Message";
 const MessageList = ({ messages }) => {
     const messageListRef = useRef(null);
     const waiting = useSelector((state) => state.message.waiting);
+    const selectedSource = useSelector((state) => state.app.selectedSource);
     const user = useSelector((state) => state.auth.user);
     const [open, setOpen] = useState(false);
     const [selMessageSource, setSelMessageSource] = useState([]);
@@ -30,7 +31,7 @@ const MessageList = ({ messages }) => {
     return (
         <>
             <div className="w-full max-w-3xl py-5 sm:py-0 mx-auto">
-                {messages.map((message, index) => (
+                {selectedSource && messages.map((message, index) => (
                     <Message
                         key={index}
                         message={message}

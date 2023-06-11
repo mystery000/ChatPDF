@@ -1,8 +1,6 @@
 const User = require('../models/user');
 const Document = require('../models/document');
 const { ingest } = require('../scripts/ingest-data');
-const { initPinecone } = require('../utils/pinecone-client');
-const { PINECONE_INDEX_NAME } = require('../config');
 const { deleteFile, chat } = require('../utils/helpers');
 
 /*
@@ -30,12 +28,14 @@ exports.addSource = async (req, res) => {
         if (files.length) {
             // Embedding PDF files into the Pinecone, returns id of pinecone index
             // await emptyFolder(dir);
-            const indexId = await ingest(files, sourceId);
+            const [indexId, fileList] = await ingest(files, sourceId);
 
             if (sourceId) {
-                const documents = files.map((file) => ({
+                const documents = fileList.map((file) => ({
                     name: file.filename,
                     path: file.path,
+                    indexKey: file.indexKey,
+                    size: file.size,
                     sourceId: sourceId,
                     userId: req.user._id,
                 }));
@@ -60,9 +60,11 @@ exports.addSource = async (req, res) => {
                         },
                     },
                 );
-                const documents = files.map((file) => ({
+                const documents = fileList.map((file) => ({
                     name: file.filename,
                     path: file.path,
+                    indexKey: file.indexKey,
+                    size: file.size,
                     sourceId: indexId,
                     userId: req.user._id,
                 }));
@@ -99,9 +101,7 @@ exports.deleteFile = async (req, res) => {
 exports.deleteSource = async (req, res) => {
     const sourceId = req.params.sourceId;
     try {
-        const pinecone = await initPinecone();
-        const index = pinecone.Index(PINECONE_INDEX_NAME);
-        await index.delete1({ deleteAll: true, namespace: sourceId });
+        await global.index.delete1({ deleteAll: true, namespace: sourceId });
         await User.updateOne(
             { _id: req.user._id, 'sources.sourceId': sourceId },
             {
