@@ -7,9 +7,15 @@ import {
     uploadDocument,
     uploadDocumentSucess,
     uploadDocumentFailure,
+    deleteDocument,
+    deleteDocumentSuccess,
+    deleteDocumentFailure,
+    updateDocument,
+    updateDocumentSuccess,
+    updateDocumentFailure,
 } from "./documentSlice";
 
-import { getRequest, postRequestWithFiles } from "../../services/axiosClient";
+import { deleteRequest, getRequest, postRequest, putRequest } from "../../services/axiosClient";
 
 function* getDocumentsAPI(action) {
     try {
@@ -29,7 +35,7 @@ function* getDocumentsAPI(action) {
 function* uploadDocumentAPI(action) {
     try {
         const response = yield call(() =>
-            postRequestWithFiles("sources/upload", action.payload)
+            postRequest("sources/addSource", action.payload)
         );
         yield put(uploadDocumentSucess(response.data));
     } catch (error) {
@@ -43,6 +49,41 @@ function* uploadDocumentAPI(action) {
     }
 }
 
+function* deleteDocumentAPI(action) {
+    try {
+        yield call(() => deleteRequest("documents/" + action.payload));
+        yield put(deleteDocumentSuccess(action.payload));
+    } catch (error) {
+        yield put(
+            deleteDocumentFailure({
+                error: {
+                    message: `Failed to delete document.`,
+                },
+            })
+        );
+    }
+}
+
+function* updateDocumentAPI(action) {
+    try {
+        const response = yield call(() => putRequest("documents/" + action.payload.id, action.payload));
+        yield put(updateDocumentSuccess(response.data));
+    } catch (error) {
+        yield put(
+            updateDocumentFailure({
+                error: {
+                    message: `Failed to update document.`,
+                },
+            })
+        );
+    }
+}
+
 export default function* rootSaga() {
-    yield all([takeLatest(getDocuments, getDocumentsAPI), takeLatest(uploadDocument, uploadDocumentAPI)]);
+    yield all([
+        takeLatest(getDocuments, getDocumentsAPI), 
+        takeLatest(uploadDocument, uploadDocumentAPI),
+        takeLatest(deleteDocument, deleteDocumentAPI),
+        takeLatest(updateDocument, updateDocumentAPI),
+    ]);
 }

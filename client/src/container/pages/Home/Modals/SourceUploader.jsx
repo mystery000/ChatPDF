@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import FormData from "form-data";
 import { InboxOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Input, Modal, Progress, Spin, Upload, message } from "antd";
-import { uploadSource } from "../../../../redux/source/sourceSlice";
+
+import { addSource } from "../../../../redux/source/sourceSlice";
+import constants from "../../../../config/constants";
+import { getStorage } from "../../../../helpers";
+import { deleteFile } from "../../../../services/sourceAPI";
 
 const SourceUploader = () => {
     const [form] = Form.useForm();
@@ -13,6 +16,12 @@ const SourceUploader = () => {
 
     const uploading = useSelector((state) => state.source.uploading);
     const uploadingError = useSelector((state) => state.source.uploadingError);
+    const onRemove = ((file) => {
+        if(file.path) {
+            deleteFile({path: file.path});
+        }
+    });
+
 
     return (
         <div className="text-center">
@@ -21,32 +30,26 @@ const SourceUploader = () => {
                 type="button"
                 onClick={() => setShowModal(true)}
             >
-                {!uploading && <PlusOutlined className="text-white mr-1" />}
-                {uploading && <Spin size="small" className="mr-1" />}
-                Add Property
+                {!uploading && (<><PlusOutlined className="text-white mr-1" /> Add Property</>)}
+                {uploading && (<><Spin size="small" className="mr-1" /> Processing...</>)}
             </button>
 
             <Modal
                 open={showModal}
                 title="Add a property"
-                okText="Upload"
+                okText="Submit"
                 cancelText="Cancel"
                 onCancel={() => setShowModal(false)}
                 onOk={() => {
                     form.validateFields()
                         .then(async (values) => {
-                            const propertyName = values.propertyName;
-                            const fileList = values.dragger.fileList;
-                            // Create from to upload files into server
-                            const formData = new FormData();
-                            formData.append("sourceName", propertyName);
-                            fileList.forEach(({ originFileObj }) => {
-                                formData.append("files", originFileObj);
-                            });
-                            dispatch(uploadSource(formData));
+                            const sourceName = values.propertyName;
+                            const fileList = values.dragger.fileList.filter(file => file.status == 'done').map(file => ({path: file.path, filename: file.response.filename}));
+                            if(fileList.length == 0) return message.error('No files uploaded.');
+                            dispatch(addSource({sourceName, fileList}));
                             form.resetFields();
                             setSources([]);
-                            setShowModal(false)
+                            setShowModal(false);
                         })
                         .catch((info) => {
                             console.log("Validate Failed:", info);
@@ -69,18 +72,25 @@ const SourceUploader = () => {
                     </Form.Item>
                     <Form.Item name="dragger" label="dragger" noStyle>
                         <Upload.Dragger
-                            name="files"
-                            beforeUpload={() => false}
+                            name="file"
+                            action={`${constants.HOST_URL}sources/uploadFile`}
                             accept="application/pdf"
+                            headers={{
+                                Authorization: getStorage('token')
+                            }}
                             fileList={sources}
                             multiple={true}
                             maxCount={5}
-                            onChange={({ fileList }) => {
+                            onChange={({ fileList, file }) => {
+                                if(file.status == 'done') {
+                                    file.path = file.response?.path;
+                                }
                                 const filterdFiles = fileList.filter(
                                     (file) => file.type === "application/pdf"
                                 );
                                 setSources(filterdFiles);
                             }}
+                            onRemove={onRemove}
                         >
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />

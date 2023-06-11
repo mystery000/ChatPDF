@@ -30,11 +30,11 @@ const sourceSlice = createSlice({
             state.sources = [];
             state.error = action.payload.error;
         },
-        uploadSource(state) {
+        addSource(state) {
             state.uploading = true;
             state.uploadingError = {};
         },
-        uploadSourceSuccess(state, action) {
+        addSourceSuccess(state, action) {
             state.uploading = false;
             const { documents, ...rest } = action.payload;
             if (rest.sourceId) {
@@ -42,7 +42,7 @@ const sourceSlice = createSlice({
                 message.success("Uploaded property successfully!");
             }
         },
-        uploadSourceFailure(state, action) {
+        addSourceFailure(state, action) {
             state.uploading = false;
             state.uploadingError = action.payload.error;
             message.error("Oops! Failed to upload property.");
@@ -89,9 +89,9 @@ export const {
     getSources,
     getSourcesSuccess,
     getSourcesFailure,
-    uploadSource,
-    uploadSourceSuccess,
-    uploadSourceFailure,
+    addSource,
+    addSourceSuccess,
+    addSourceFailure,
     deleteSource,
     deleteSourceSuccess,
     deleteSourceFailure,

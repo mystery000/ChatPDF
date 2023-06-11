@@ -33,10 +33,46 @@ const documentSlice = createSlice({
             state.loading = false;
             state.error = action.payload.error;
         },
+        deleteDocument(state) {
+            state.loading = true;
+        },
+        deleteDocumentSuccess(state, action) {
+            state.loading = false;
+            state.documents = state.documents.filter(doc => doc._id !== action.payload);
+        },
+        deleteDocumentFailure(state, action) {
+            state.loading = false;
+            state.error = action.payload.error;
+        },
+        updateDocument(state) {
+            state.loading = true;
+        },
+        updateDocumentSuccess(state, action) {
+            state.loading = false;
+            state.documents = state.documents.filter(doc => doc._id !== action.payload.document._id);
+            state.documents.push(action.payload.document);
+        },
+        updateDocumentFailure(state, action) {
+            state.loading = false;
+            state.error = action.payload.error;
+        },
     }
 });
 
-export const { getDocuments, getDocumentsSuccess, getDocumentsFailure, uploadDocument, uploadDocumentSucess, uploadDocumentFailure } =
+export const { 
+    getDocuments, 
+    getDocumentsSuccess, 
+    getDocumentsFailure, 
+    uploadDocument, 
+    uploadDocumentSucess, 
+    uploadDocumentFailure,
+    deleteDocument,
+    deleteDocumentSuccess,
+    deleteDocumentFailure,
+    updateDocument,
+    updateDocumentSuccess,
+    updateDocumentFailure,
+} =
     documentSlice.actions;
 
 export default documentSlice.reducer;

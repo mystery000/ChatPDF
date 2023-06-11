@@ -47,7 +47,7 @@ const PromptBox = () => {
     }, [canAsk, waiting]);
 
     return (
-        <div className="pb-3 bg-white w-full px-2 sticky bottom-0 left-0">
+        <div className="py-3 bg-white w-full px-2 sticky bottom-0 left-0">
             <div className="max-w-3xl pl-2 mx-auto">
                 <Space.Compact style={{ width: "100%" }} size="large">
                     <Input

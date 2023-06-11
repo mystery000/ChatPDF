@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import FormData from "form-data";
 import { InboxOutlined } from "@ant-design/icons";
-import { Form, Modal, Upload} from "antd";
+import { Form, Modal, Upload, message } from "antd";
 import { uploadDocument } from "../../../../redux/document/documentSlice";
+import { getStorage } from "../../../../helpers";
+import constants from "../../../../config/constants";
+import { deleteFile } from "../../../../services/sourceAPI";
 
 const DocumentUploadModal = ({ open, onClose }) => {
     const [form] = Form.useForm();
@@ -14,24 +16,25 @@ const DocumentUploadModal = ({ open, onClose }) => {
     const selectedSource = useSelector((state) => state.app.selectedSource);
     const uploadingError = useSelector((state) => state.source.uploadingError);
 
+    const onRemove = ((file) => {
+        if (file.path) {
+            deleteFile({ path: file.path });
+        }
+    });
+
     return (
         <Modal
             open={open}
             title="Add a Documents"
-            okText="Upload"
+            okText="Submit"
             cancelText="Cancel"
             onCancel={() => onClose()}
             onOk={() => {
                 form.validateFields()
                     .then(async (values) => {
-                        const fileList = values.dragger.fileList;
-                        // Create from to upload files into server
-                        const formData = new FormData();
-                        formData.append("sourceId", selectedSource);
-                        fileList.forEach(({ originFileObj }) => {
-                            formData.append("files", originFileObj);
-                        });
-                        dispatch(uploadDocument(formData));
+                        const fileList = values.dragger.fileList.filter(file => file.status == 'done').map(file => ({ path: file.path, filename: file.response.filename }));
+                        if (fileList.length == 0) return message.error('No files uploaded.');
+                        dispatch(uploadDocument({ fileList, sourceId: selectedSource }));
                         form.resetFields();
                         setSources([]);
                         onClose();
@@ -45,18 +48,25 @@ const DocumentUploadModal = ({ open, onClose }) => {
             <Form form={form} layout="vertical">
                 <Form.Item name="dragger" label="dragger" noStyle>
                     <Upload.Dragger
-                        name="files"
-                        beforeUpload={() => false}
+                        name="file"
+                        action={`${constants.HOST_URL}sources/uploadFile`}
                         accept="application/pdf"
+                        headers={{
+                            Authorization: getStorage('token')
+                        }}
                         fileList={sources}
                         multiple={true}
                         maxCount={5}
-                        onChange={({ fileList }) => {
+                        onChange={({ fileList, file }) => {
+                            if (file.status == 'done') {
+                                file.path = file.response?.path;
+                            }
                             const filterdFiles = fileList.filter(
                                 (file) => file.type === "application/pdf"
                             );
                             setSources(filterdFiles);
                         }}
+                        onRemove={onRemove}
                     >
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />

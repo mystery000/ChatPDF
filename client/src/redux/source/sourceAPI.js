@@ -4,9 +4,9 @@ import {
     getSources,
     getSourcesSuccess,
     getSourcesFailure,
-    uploadSource,
-    uploadSourceSuccess,
-    uploadSourceFailure,
+    addSource,
+    addSourceSuccess,
+    addSourceFailure,
     deleteSource,
     deleteSourceSuccess,
     deleteSourceFailure,
@@ -20,7 +20,7 @@ import { uploadDocumentSucess } from "../document/documentSlice";
 
 import {
     getRequest,
-    postRequestWithFiles,
+    postRequest,
     deleteRequest,
     putRequest,
 } from "../../services/axiosClient";
@@ -40,17 +40,17 @@ function* getSourcesAPI() {
     }
 }
 
-function* uploadSourceAPI(action) {
+function* addSourceAPI(action) {
     try {
         const response = yield call(() =>
-            postRequestWithFiles("sources/upload", action.payload)
+            postRequest("sources/addSource", action.payload)
         );
         yield put(uploadDocumentSucess(response.data));
         yield put(setSelectedSource(response.data));
-        yield put(uploadSourceSuccess(response.data));
+        yield put(addSourceSuccess(response.data));
     } catch (error) {
         yield put(
-            uploadSourceFailure({
+            addSourceFailure({
                 error: {
                     message: `Failed to upload files due to ${error?.message}`,
                 },
@@ -98,7 +98,7 @@ function* renameSourceAPI(action) {
 export default function* rootSaga() {
     yield all([
         takeLatest(getSources, getSourcesAPI),
-        takeLatest(uploadSource, uploadSourceAPI),
+        takeLatest(addSource, addSourceAPI),
         takeLatest(deleteSource, deleteSourceAPI),
         takeLatest(renameSource, renameSourceAPI),
     ]);

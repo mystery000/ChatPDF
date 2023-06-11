@@ -82,7 +82,7 @@ const ToolBar = () => {
                 <span
                     className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
                 >
-                    <DeleteOutlined className="!text-[18px]" />
+                    <DeleteOutlined className="!text-[18px]" /> Delete
                 </span>
             </Popconfirm>
         },
@@ -91,7 +91,7 @@ const ToolBar = () => {
             label: <span
                 className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
             >
-                <EditOutlined className="!text-[18px]" />
+                <EditOutlined className="!text-[18px]" /> Rename
             </span>,
             onClick: () => {
                 setRenameModalOpen(true);
@@ -101,7 +101,7 @@ const ToolBar = () => {
             title: "Reset chat history",
             label: <span className="cursor-pointer inline-block px-1 hover:text-[#40a9ff]"
             >
-                <ClearOutlined className="!text-[18px]" />
+                <ClearOutlined className="!text-[18px]" /> Reset chat history
             </span>,
             onClick: handleReset,
         },

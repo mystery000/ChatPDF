@@ -13,7 +13,7 @@ const MessageList = ({ messages }) => {
     const [selMessageSource, setSelMessageSource] = useState([]);
 
     const showDrawer = (message) => {
-        if(!user.isAdmin) return;
+        if (!user.isAdmin) return;
         setSelMessageSource(message.sourceDocuments);
         setOpen(true);
     };
@@ -29,26 +29,24 @@ const MessageList = ({ messages }) => {
 
     return (
         <>
-            <div className="flex flex-1 w-full overflow-auto justify-center h-[calc(100vh_-_108px)]">
-                <div className="w-full max-w-3xl">
-                    {messages.map((message, index) => (
-                        <Message
-                            key={index}
-                            message={message}
-                            isLast={messages.length === index + 1}
-                            onClick={() => showDrawer(message)}
-                        />
-                    ))}
-                    {waiting && <LoadingMessage />}
-                    <div ref={messageListRef}></div>
-                    <Drawer title="Sources Documents" width={350} placement="right" onClose={onClose} open={open}>
-                        <Space direction="vertical">
-                            {selMessageSource.map((source, i) => <Card title={`Document ${i + 1}`} key={i}>
-                                <p>{source.pageContent}</p>
-                            </Card>)}
-                        </Space>
-                    </Drawer>
-                </div>
+            <div className="w-full max-w-3xl py-5 sm:py-0 mx-auto">
+                {messages.map((message, index) => (
+                    <Message
+                        key={index}
+                        message={message}
+                        isLast={messages.length === index + 1}
+                        onClick={() => showDrawer(message)}
+                    />
+                ))}
+                {waiting && <LoadingMessage />}
+                <div ref={messageListRef}></div>
+                <Drawer title="Sources Documents" width={350} placement="right" onClose={onClose} open={open}>
+                    <Space direction="vertical">
+                        {selMessageSource.map((source, i) => <Card title={`Document ${i + 1}`} key={i}>
+                            <p>{source.pageContent}</p>
+                        </Card>)}
+                    </Space>
+                </Drawer>
             </div>
         </>
     );
