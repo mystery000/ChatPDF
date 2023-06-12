@@ -10,6 +10,7 @@ import {
   Modal,
   Input,
   Pagination,
+  Tooltip,
 } from "antd";
 import {
   FilePdfOutlined,
@@ -17,6 +18,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  FullscreenOutlined,
 } from "@ant-design/icons";
 import { BsChatLeftDots, BsThreeDotsVertical } from "react-icons/bs";
 // import { Document, Page, pdfjs } from "react-pdf";
@@ -59,7 +61,7 @@ const SourceList = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const fullScreenPluginInstance = fullScreenPlugin();
   const pageNavigationPluginInstance = pageNavigationPlugin();
-
+  const { EnterFullScreen } = fullScreenPluginInstance;
   const { CurrentPageLabel } = pageNavigationPluginInstance;
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -252,7 +254,26 @@ const SourceList = () => {
         open={openPDFModal}
         title={selectedDocument.name}
         onCancel={() => setOpenPDFModal(false)}
-        footer={[]}
+        footer={[
+          <div className="flex justify-center items-center h-[32px]">
+            <CurrentPageLabel>
+              {(props) => (
+                <span>{`${props.currentPage + 1} / ${
+                  props.numberOfPages
+                }`}</span>
+              )}
+            </CurrentPageLabel>
+            <EnterFullScreen>
+              {(props) => (
+                <Tooltip placement="top" title={'Full Screen Mode'}>
+                  <span className="cursor-pointer ml-2" onClick={props.onClick}>
+                    <FullscreenOutlined />
+                  </span>
+                </Tooltip>
+              )}
+            </EnterFullScreen>
+          </div>,
+        ]}
       >
         <div
           style={{
@@ -266,15 +287,6 @@ const SourceList = () => {
               plugins={[fullScreenPluginInstance, pageNavigationPluginInstance]}
             />
           )}
-          <div className="flex justify-center mt-2">
-            <CurrentPageLabel>
-              {(props) => (
-                <span>{`${props.currentPage + 1} / ${
-                  props.numberOfPages
-                }`}</span>
-              )}
-            </CurrentPageLabel>
-          </div>
         </div>
       </Modal>
     </div>
